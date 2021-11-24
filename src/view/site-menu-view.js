@@ -1,4 +1,4 @@
-export const createSiteMenuTemplate = () => (
+const createSiteMenuTemplate = () => (
   `<div class="trip-main__trip-controls  trip-controls">
   <div class="trip-controls__navigation">
     <h2 class="visually-hidden">Switch trip view</h2>
@@ -9,3 +9,4 @@ export const createSiteMenuTemplate = () => (
   </div>`
 );
 
+export {createSiteMenuTemplate};
