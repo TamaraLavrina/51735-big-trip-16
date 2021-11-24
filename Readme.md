@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Тамара Верещак](https://up.htmlacademy.ru/ecmascript/16/user/51735).
-* Наставник: `Неизвестно`.
+* Наставник: [Владислав Зубко](https://htmlacademy.ru/profile/whatislove).
 
 ---
 
