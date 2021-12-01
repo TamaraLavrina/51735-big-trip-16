@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
-const isFuture = (dueDate) => dueDate && dayjs().isBefore(dueDate, 'D');
-const isPointPast = (dueDate) => dueDate && dayjs().isAfter(dueDate, 'D');
+const isFuture = (startDate) => dayjs(startDate).isAfter(dayjs(), 'D');
+const isPointPast = (startDate) => dayjs(startDate).isBefore(dayjs(), 'D');
 
 const pointsToFilterMap = {
   everything: (points) => points.length,
-  future: (points) =>  points.filter((point) => isFuture(point.dueDate)).length,
-  past: (points) => points.filter((point) => isPointPast(point.dueDate)).length,
+  future: (points) =>  points.filter((point) => isFuture(point.startDate)).length,
+  past: (points) => points.filter((point) => isPointPast(point.startDate)).length,
 };
 
 export const generateFilter = (points) => Object.entries(pointsToFilterMap).map(

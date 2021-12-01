@@ -31,4 +31,4 @@ for (let i = 0; i < EVENT_POINT_COUNT; i++) {
   renderTemplate(mainEventsList, createPointTemplate(points[i]), RenderPosition.BEFOREEND);
 }
 
-renderTemplate(mainEventsList, createFormEditTemplate(), RenderPosition.BEFOREEND);
+renderTemplate(mainEventsList, createFormEditTemplate(points[0]), RenderPosition.BEFOREEND);

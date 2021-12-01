@@ -5,14 +5,15 @@ const createFilterItemTemplate = (filter, isChecked) => {
     `<div class="trip-filters__filter">
     <input
       type="radio"
-      id="filter__${name}"
-      class="filter__input visually-hidden"
-      name="filter"
+      id="filter-${name}"
+      class="trip-filters__filter-input  visually-hidden"
+      name="trip-filter"
       ${isChecked ? 'checked' : ''}
       ${count === 0 ? 'disabled' : ''}
+      value="${name}"
     />
-    <label for="filter__${name}" class="filter__label">
-      ${name} <span class="filter__${name}-count">${count}</span></label
+    <label class="trip-filters__filter-label" for="filter-${name}" >
+      ${name} <span>${count}</span></label
     >
     </div>`
   );

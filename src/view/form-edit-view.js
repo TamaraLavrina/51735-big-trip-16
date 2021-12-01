@@ -1,21 +1,23 @@
-import { TYPE, OFFERS_TYPES } from '../constants';
-// const createPhotoTemplate = (photos) => photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join('');
-const createOffersTemplate = (offers, type) => {
-  OFFERS_TYPES.map((offer) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${TYPE}-${offer.id}" type="checkbox" name="event-offer-${TYPE}" checked>
-    <label class="event__offer-label" for="event-offer-${type}-${offer.id}">
-      <span class="event__offer-title">${offer.title}</span>
+const createAdditionalOffer = (offers) => {
+  if (offers.length) {
+    return `<div class="event__available-offers">
+    ${offers.map(({title, price}) => `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ')}-1" type="checkbox" name="event-offer-${title.split(' ')}" checked>
+    <label class="event__offer-label" for="event-offer-${title.split(' ')}-1">
+      <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
+      <span class="event__offer-price">${price}</span>
     </label>
-  </div>`);
+  </div>`)}
+    </div>
+  </section>`;
+  }
+  return '';
 };
-
 
 const createFormEditTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, description, offers} = point;
-  // const photosTemplate = createPhotoTemplate(photos);
-  const offersTemplate = createOffersTemplate(offers, type);
+  const offersTemplate = createAdditionalOffer(offers);
   return  ` <li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -115,12 +117,8 @@ const createFormEditTemplate = (point) => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-       ${offersTemplate}
-        </div>
+        <div class="event__available-offers">${offersTemplate}</div>
       </section>
-
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">${destination}</h3>
         <p class="event__destination-description">${description}</p>
