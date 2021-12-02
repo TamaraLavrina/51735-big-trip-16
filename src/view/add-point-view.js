@@ -13,7 +13,11 @@ const countDuration = (start, finish) => {
 
   if(durationInMinutes >= HOUR && durationInMinutes < MINUTES_IN_DAY) {
     return `${dayjs.duration(durationInMinutes, 'minute').format('HH')}H ${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;
-  } else {return `${dayjs.duration(durationInMinutes, 'minute').format('DD')}D ${dayjs.duration(durationInMinutes, 'minute').format('HH')}H ${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;}
+  }
+
+  return `${dayjs.duration(durationInMinutes, 'minute').format('DD')}D
+          ${dayjs.duration(durationInMinutes, 'minute').format('HH')}H
+          ${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;
 };
 
 const createPointTemplate = (point) => {

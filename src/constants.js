@@ -1,14 +1,16 @@
-const TYPE = [
-  'Taxi',
-  'Bus',
-  'Train',
-  'Ship',
-  'Drive',
-  'Flight',
-  'Check-in',
-  'Sightseeing',
-  'Restaurant',
-];
+const offerTypes = {
+  TAXI: 'Taxi',
+  BUS:'Bus',
+  TRAIN:'Train',
+  SHIP:'Ship',
+  DRIVE:'Drive',
+  FLIGHT:'Flight',
+  CHECKIN:'Check-in',
+  SIGHTSEENING:'Sightseeing',
+  RESTARAUNT:'Restaurant'
+};
+
+const OFFERS_TYPES = Object.values(offerTypes);
 
 const CITY = [
   'Geneva',
@@ -21,8 +23,7 @@ const CITY = [
 
 const EVENT_POINT_COUNT = 15;
 
-
-const OFFERS_TYPES = [
+const additionalOffers = [
   {
     'type': 'Taxi',
     'offers': [
@@ -217,10 +218,10 @@ const MINUTES_IN_DAY = 24*60;
 const HOUR = 60;
 
 export {
-  TYPE,
   CITY,
   EVENT_POINT_COUNT,
   POINT_PRICE,
+  additionalOffers,
   OFFERS_TYPES,
   DESCRIPTION_CITY,
   MINUTES_IN_DAY,

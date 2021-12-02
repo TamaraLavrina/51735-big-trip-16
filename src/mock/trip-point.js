@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { TYPE, CITY, POINT_PRICE, OFFERS_TYPES, DESCRIPTION_CITY } from '../constants.js';
+import  {CITY, POINT_PRICE, OFFERS_TYPES, DESCRIPTION_CITY, additionalOffers } from '../constants.js';
 import { getRandomInteger } from '../utils.js';
 
 
@@ -41,7 +41,7 @@ const generateDate = () => {
 };
 
 const generatePoint = () => {
-  const type = generateTypePoint(TYPE);
+  const type = generateTypePoint(OFFERS_TYPES);
   const destination = generateDestination(CITY);
   const date = generateDate();
   return {
@@ -51,10 +51,13 @@ const generatePoint = () => {
     basePrice: generateRandomPrice(type),
     startDate: date.startDate,
     finishDate: date.endDate,
-    offers: (OFFERS_TYPES.find((el) => el.type === type)).offers,
+    offers: (additionalOffers.find((el) => el.type === type)).offers,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     photos: getRandomPhotos(),
   };
 };
 
-export {generatePoint};
+export {generatePoint,
+  getRandomPhotos };
+
+

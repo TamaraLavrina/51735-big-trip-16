@@ -1,6 +1,4 @@
-import dayjs from 'dayjs';
-const isFuture = (startDate) => dayjs(startDate).isAfter(dayjs(), 'D');
-const isPointPast = (startDate) => dayjs(startDate).isBefore(dayjs(), 'D');
+import {isFuture, isPointPast }  from '../utils.js';
 
 const pointsToFilterMap = {
   everything: (points) => points.length,
@@ -8,9 +6,11 @@ const pointsToFilterMap = {
   past: (points) => points.filter((point) => isPointPast(point.startDate)).length,
 };
 
-export const generateFilter = (points) => Object.entries(pointsToFilterMap).map(
+const generateFilter = (points) => Object.entries(pointsToFilterMap).map(
   ([filterName, countPoints]) => ({
     name: filterName,
     count: countPoints(points),
   }),
 );
+
+export {generateFilter};

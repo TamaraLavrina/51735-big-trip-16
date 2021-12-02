@@ -27,7 +27,7 @@ renderTemplate(mainEvents, createEventsListTemplate(), RenderPosition.BEFOREEND)
 const mainEventsList = mainEvents.querySelector('.trip-events__list');
 renderTemplate(mainEventsList, createFormAddNewPointTemplate(), RenderPosition.BEFOREEND);
 
-for (let i = 0; i < EVENT_POINT_COUNT; i++) {
+for (let i = 1; i < EVENT_POINT_COUNT; i++) {
   renderTemplate(mainEventsList, createPointTemplate(points[i]), RenderPosition.BEFOREEND);
 }
 
