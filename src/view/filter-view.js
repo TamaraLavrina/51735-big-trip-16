@@ -1,3 +1,5 @@
+import { createElement } from '../render';
+
 const createFilterItemTemplate = (filter, isChecked) => {
   const {name, count} = filter;
 
@@ -30,4 +32,30 @@ const createSiteFiltersTemplate = (filterItems) => {
   </form>`;
 };
 
-export {createSiteFiltersTemplate};
+class FilterView {
+  #element = null;
+  #filters = null;
+
+  constructor(filters) {
+    this.#filters = filters;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSiteFiltersTemplate(this.#filters);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+export default FilterView;
+

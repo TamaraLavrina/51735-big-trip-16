@@ -1,11 +1,13 @@
 import {createElement} from '../render.js';
 
-const createEventsListTemplate = () => (
-  `<ul class="trip-events__list">
-  </ul>`
+const createLoadingTemplate = () => (
+  `<section class="trip-events">
+  <h2 class="visually-hidden">Trip events</h2>
+  <p class="trip-events__msg">Loading...</p>
+  </section>`
 );
 
-class EventSked {
+class Loading {
   #element = null;
 
   get element() {
@@ -17,7 +19,7 @@ class EventSked {
   }
 
   get template() {
-    return createEventsListTemplate();
+    return createLoadingTemplate();
   }
 
   removeElement() {
@@ -25,4 +27,4 @@ class EventSked {
   }
 }
 
-export default EventSked;
+export default Loading;

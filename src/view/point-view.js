@@ -1,4 +1,5 @@
-import {HOUR, MINUTES_IN_DAY} from '../constants.js';
+import { createElement } from '../render.js';
+import { HOUR, MINUTES_IN_DAY } from '../constants.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
@@ -70,4 +71,29 @@ const createPointTemplate = (point) => {
 </li>`;
 };
 
-export {createPointTemplate};
+class PointView {
+  #element = null;
+  #point = null;
+
+  constructor(point) {
+    this.#point = point;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createPointTemplate(this.#point);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+export default PointView;

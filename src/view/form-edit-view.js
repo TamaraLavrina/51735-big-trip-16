@@ -1,3 +1,7 @@
+import { createElement } from '../render.js';
+import { BLANK_POINT } from '../mock/trip-point.js';
+
+
 const createAdditionalOffer = (offers) => {
   if (offers.length) {
     return `<div class="event__available-offers">
@@ -9,8 +13,7 @@ const createAdditionalOffer = (offers) => {
       <span class="event__offer-price">${price}</span>
     </label>
   </div>`)}
-    </div>
-  </section>`;
+    </div>`;
   }
   return '';
 };
@@ -18,7 +21,7 @@ const createAdditionalOffer = (offers) => {
 const createFormEditTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, description, offers} = point;
   const offersTemplate = createAdditionalOffer(offers);
-  return  ` <li class="trip-events__item">
+  return  `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -117,15 +120,39 @@ const createFormEditTemplate = (point) => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">${offersTemplate}</div>
-      </section>
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">${destination}</h3>
-        <p class="event__destination-description">${description}</p>
-      </section>
-    </section>
+        <div class="event__available-offers">${offersTemplate}</div></section>
+        <section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">${destination}</h3>
+          <p class="event__destination-description">${description}</p>
+        </section>
+  </section>
   </form>
 </li>`;
 };
 
-export {createFormEditTemplate};
+class FormEditView {
+  #element = null;
+  #point = null;
+
+  constructor(point = BLANK_POINT) {
+    this.#point = point;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createFormEditTemplate(this.#point);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
+
+export default FormEditView;
