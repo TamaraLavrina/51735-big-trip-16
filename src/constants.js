@@ -1,4 +1,6 @@
-const offerTypes = {
+const EVENT_POINT_COUNT = 15;
+
+const OfferType = {
   TAXI: 'Taxi',
   BUS:'Bus',
   TRAIN:'Train',
@@ -10,7 +12,7 @@ const offerTypes = {
   RESTARAUNT:'Restaurant'
 };
 
-const OFFERS_TYPES = Object.values(offerTypes);
+const OFFERS_TYPES = Object.values(OfferType);
 
 const CITY = [
   'Geneva',
@@ -21,11 +23,9 @@ const CITY = [
   'Berlin',
 ];
 
-const EVENT_POINT_COUNT = 15;
-
 const additionalOffers = [
   {
-    'type': 'Taxi',
+    'type':  OfferType.TAXI,
     'offers': [
       {
         'id': 1,
@@ -45,7 +45,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Bus',
+    'type':  OfferType.BUS,
     'offers': [
       {
         'id': 1,
@@ -60,7 +60,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Train',
+    'type': OfferType.TRAIN,
     'offers': [
       {
         'id': 1,
@@ -75,7 +75,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Ship',
+    'type': OfferType.SHIP,
     'offers': [
       {
         'id': 1,
@@ -90,7 +90,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Drive',
+    'type': OfferType.DRIVE,
     'offers': [
       {
         'id': 1,
@@ -105,7 +105,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Flight',
+    'type': OfferType.FLIGHT,
     'offers': [
       {
         'id': 1,
@@ -120,7 +120,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Check-in',
+    'type': OfferType.CHECKIN,
     'offers': [
       {
         'id': 1,
@@ -135,7 +135,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Sightseeing',
+    'type': OfferType.SIGHTSEENING,
     'offers': [
       {
         'id': 1,
@@ -150,7 +150,7 @@ const additionalOffers = [
     ]
   },
   {
-    'type': 'Restaurant',
+    'type': OfferType.RESTARAUNT,
     'offers': [
       {
         'id': 1,
@@ -167,39 +167,39 @@ const additionalOffers = [
 ];
 
 const POINT_PRICE = {
-  'Taxi': {
+  [OfferType.TAXI]: {
     min: 50,
     max: 100
   },
-  'Bus': {
+  [OfferType.BUS]: {
     min: 20,
     max: 50
   },
-  'Train': {
+  [OfferType.TRAIN]: {
     min: 100,
     max: 200
   },
-  'Ship': {
+  [OfferType.SHIP]: {
     min: 300,
     max: 500
   },
-  'Drive': {
+  [OfferType.DRIVE]: {
     min: 500,
     max: 600
   },
-  'Flight': {
+  [OfferType.FLIGHT]: {
     min: 600,
     max: 1000
   },
-  'Check-in': {
+  [OfferType.CHECKIN]: {
     min: 0,
     max: 15
   },
-  'Sightseeing': {
+  [OfferType.SIGHTSEENING]: {
     min: 5,
     max: 300
   },
-  'Restaurant': {
+  [OfferType.RESTARAUNT]: {
     min: 50,
     max: 150
   },
