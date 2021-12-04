@@ -57,7 +57,29 @@ const generatePoint = () => {
   };
 };
 
-export {generatePoint,
-  getRandomPhotos };
+const generateBlanckPoint = ()=> {
+  const type = generateTypePoint(OFFERS_TYPES);
+  const destination = generateDestination(CITY);
+  const date = generateDate();
+  return {
+    type: type,
+    destination: destination,
+    description: generateDescription(DESCRIPTION_CITY),
+    basePrice: generateRandomPrice(type),
+    startDate: dayjs(),
+    finishDate: date.endDate,
+    offers: (additionalOffers.find((el) => el.type === type)).offers,
+    isFavorite: false,
+    photos: getRandomPhotos(),
+  };
+};
+
+const BLANK_POINT = generateBlanckPoint();
+
+export {
+  generatePoint,
+  getRandomPhotos,
+  BLANK_POINT
+};
 
 
