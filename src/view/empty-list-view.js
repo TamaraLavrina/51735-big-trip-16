@@ -3,11 +3,11 @@ import {createElement} from '../render.js';
 const createLoadingTemplate = () => (
   `<section class="trip-events">
   <h2 class="visually-hidden">Trip events</h2>
-  <p class="trip-events__msg">Loading...</p>
+  <p class="trip-events__msg">Click New Event to create your first point</p>
   </section>`
 );
 
-class Loading {
+class EmptyList {
   #element = null;
 
   get element() {
@@ -27,4 +27,4 @@ class Loading {
   }
 }
 
-export default Loading;
+export default EmptyList;

@@ -8,7 +8,7 @@ import SortView from './view/sort-view.js';
 import FilterView from './view/filter-view.js';
 import PointView from './view/point-view.js';
 import FormEditView from './view/form-edit-view.js';
-import Loading from './view/loading.js';
+import EmptyList from './view/empty-list-view.js';
 import { generatePoint } from './mock/trip-point.js';
 import { generateFilter } from './mock/filters.js';
 
@@ -58,11 +58,17 @@ const renderPoint = (eventListElement, point) => {
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
+  formEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+    document.removeEventListener('keydown', onEscKeyDown);
+  });
+
   render(eventListElement, pointComponent.element, RenderPosition.BEFOREEND);
 };
 
 if (points.length === 0) {
-  render(eventListComponent.element, new Loading().element, RenderPosition.BEFOREEND );
+  render(eventListComponent.element, new EmptyList().element, RenderPosition.BEFOREEND );
 } else {
   render(mainTripComponent.element, new MainTripInfoView().element, RenderPosition.AFTERBEGIN);
   render(mainEvents, new SortView().element, RenderPosition.AFTERBEGIN);
