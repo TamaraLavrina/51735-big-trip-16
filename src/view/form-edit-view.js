@@ -1,6 +1,5 @@
-import { createElement } from '../render.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
-
+import AbstractView from './abstract-view.js';
 
 const createAdditionalOffer = (offers) => {
   if (offers.length) {
@@ -130,29 +129,38 @@ const createFormEditTemplate = (point) => {
 </li>`;
 };
 
-class FormEditView {
-  #element = null;
+class FormEditView extends AbstractView{
   #point = null;
 
   constructor(point = BLANK_POINT) {
+    super();
     this.#point = point;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFormEditTemplate(this.#point);
   }
 
-  removeElement() {
-    this.#element = null;
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setRollUpClickHandler = (callback) => {
+    this._callback.rollUpClickHandler = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpClickHandler);
+  }
+
+  #rollUpClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.rollUpClickHandler();
   }
 }
+
 
 export default FormEditView;
