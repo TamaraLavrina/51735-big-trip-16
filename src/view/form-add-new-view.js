@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {getRandomPhotos}  from '../mock/trip-point.js';
 import {OFFERS_TYPES} from '../constants.js';
+// import AbstractView from './abstract-view.js';
 
 const photos = getRandomPhotos();
 const createPhotoTemplate = (pics) => pics.map((pic) => `<img class="event__photo" src="${pic}" alt="Event photo">`).join('');

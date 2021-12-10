@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createMainTripTemplate = () => (
   `<div class="trip-main">
@@ -8,23 +8,9 @@ const createMainTripTemplate = () => (
   </div>`
 );
 
-class MainTripView {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
+class MainTripView extends AbstractView{
   get template() {
     return createMainTripTemplate();
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
 

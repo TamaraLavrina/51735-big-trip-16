@@ -1,8 +1,8 @@
-import { createElement } from '../render.js';
 import { HOUR, MINUTES_IN_DAY } from '../constants.js';
-import dayjs from 'dayjs';
+import dayjs  from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
+import AbstractView from './abstract-view.js';
 
 
 const countDuration = (start, finish) => {
@@ -71,28 +71,26 @@ const createPointTemplate = (point) => {
 </li>`;
 };
 
-class PointView {
-  #element = null;
+class PointView extends AbstractView {
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createPointTemplate(this.#point);
   }
 
-  removeElement() {
-    this.#element = null;
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  }
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 }
 
