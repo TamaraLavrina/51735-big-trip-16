@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import  {CITY, POINT_PRICE, OFFERS_TYPES, DESCRIPTION_CITY, additionalOffers } from '../constants.js';
 import { getRandomInteger } from '../utils.js';
 
@@ -45,6 +46,7 @@ const generatePoint = () => {
   const destination = generateDestination(CITY);
   const date = generateDate();
   return {
+    id: nanoid(),
     type: type,
     destination: destination,
     description: generateDescription(DESCRIPTION_CITY),
@@ -62,6 +64,7 @@ const generateBlanckPoint = ()=> {
   const destination = generateDestination(CITY);
   const date = generateDate();
   return {
+    id: nanoid(),
     type: type,
     destination: destination,
     description: generateDescription(DESCRIPTION_CITY),
