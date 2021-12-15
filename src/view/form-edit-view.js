@@ -4,9 +4,9 @@ import AbstractView from './abstract-view.js';
 const createAdditionalOffer = (offers) => {
   if (offers.length) {
     return `<div class="event__available-offers">
-    ${offers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ')}-1" type="checkbox" name="event-offer-${title.split(' ')}" checked>
-    <label class="event__offer-label" for="event-offer-${title.split(' ')}-1">
+    ${offers.map(({title, id, price}) => `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" checked>
+    <label class="event__offer-label" for="event-offer-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
@@ -148,7 +148,7 @@ class FormEditView extends AbstractView{
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this.#point);
   }
 
   setRollUpClickHandler = (callback) => {
