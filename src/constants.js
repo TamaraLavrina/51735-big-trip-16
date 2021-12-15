@@ -217,6 +217,29 @@ const DESCRIPTION_CITY = [
 const MINUTES_IN_DAY = 24*60;
 const HOUR = 60;
 
+const SortType = {
+  DAY: {
+    name: 'day',
+    disabled: false,
+  },
+  EVENT: {
+    name: 'event',
+    disabled: true,
+  },
+  TIME: {
+    name: 'time',
+    disabled: false,
+  },
+  PRICE: {
+    name: 'price',
+    disabled: false,
+  },
+  OFFERS: {
+    name: 'offers',
+    disabled: true,
+  },
+};
+
 export {
   CITY,
   EVENT_POINT_COUNT,
@@ -226,5 +249,6 @@ export {
   DESCRIPTION_CITY,
   MINUTES_IN_DAY,
   HOUR,
+  SortType,
 };
 

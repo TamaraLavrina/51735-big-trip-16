@@ -1,25 +1,8 @@
-import { HOUR, MINUTES_IN_DAY } from '../constants.js';
 import dayjs  from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import AbstractView from './abstract-view.js';
-
-
-const countDuration = (start, finish) => {
-  const durationInMinutes = dayjs(finish).diff(dayjs(start), 'minute');
-
-  if(durationInMinutes < HOUR) {
-    return `${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;
-  }
-
-  if(durationInMinutes >= HOUR && durationInMinutes < MINUTES_IN_DAY) {
-    return `${dayjs.duration(durationInMinutes, 'minute').format('HH')}H ${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;
-  }
-
-  return `${dayjs.duration(durationInMinutes, 'minute').format('DD')}D
-          ${dayjs.duration(durationInMinutes, 'minute').format('HH')}H
-          ${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;
-};
+import { countDuration } from '../utils.js';
 
 const createPointTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, offers, isFavorite} = point;
