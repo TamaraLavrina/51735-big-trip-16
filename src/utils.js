@@ -41,9 +41,11 @@ const countDuration = (start, finish) => {
           ${dayjs.duration(durationInMinutes, 'minute').format('mm')}M`;
 };
 
+const getDiffTimePoint = (startDate, finishDate) => dayjs(finishDate).diff(dayjs(startDate));
+
 
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
-const sortPointTime = (pointA, pointB) => countDuration(pointB.startDate, pointB.finishDate) - countDuration(pointA.startDate, pointA.finishDate);
+const sortPointTime = (pointA, pointB) => getDiffTimePoint(pointB.startDate, pointB.finishDate) - getDiffTimePoint(pointA.startDate, pointA.finishDate);
 const sortPointDay = (pointA, pointB) => pointA.finishDate - pointB.startDate;
 
 export {getRandomInteger,
