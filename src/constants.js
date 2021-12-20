@@ -218,26 +218,11 @@ const MINUTES_IN_DAY = 24*60;
 const HOUR = 60;
 
 const SortType = {
-  DAY: {
-    name: 'day',
-    disabled: false,
-  },
-  EVENT: {
-    name: 'event',
-    disabled: true,
-  },
-  TIME: {
-    name: 'time',
-    disabled: false,
-  },
-  PRICE: {
-    name: 'price',
-    disabled: false,
-  },
-  OFFERS: {
-    name: 'offers',
-    disabled: true,
-  },
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
 };
 
 export {

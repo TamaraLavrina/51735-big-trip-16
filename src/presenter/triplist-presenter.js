@@ -18,7 +18,7 @@ class TripListPresenter {
 
   #boardPoints = [];
   #pointPresenter = new Map();
-  #currentSortType = SortType.DAY.name;
+  #currentSortType = SortType.DAY;
   #sourcedBoardPoints = [];
 
   constructor(tripListContainer) {
@@ -45,14 +45,17 @@ class TripListPresenter {
 
   #sortPoints = (sortType) => {
     switch(sortType) {
-      case SortType.PRICE.name:
+      case SortType.PRICE:{
         this.#boardPoints.sort(sortPointPrice);
         break;
-      case SortType.TIME.name:
+      }
+      case SortType.TIME:{
         this.#boardPoints.sort(sortPointTime);
         break;
-      default:
+      }
+      default:{
         this.#boardPoints = this.#boardPoints.sort(sortPointDay);
+      }
     }
     this.#currentSortType = sortType;
   }
