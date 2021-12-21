@@ -23,5 +23,7 @@ render(controls, new SiteMenuView(), RenderPosition.BEFOREEND);
 render(controls, new FilterView(filters), RenderPosition.BEFOREEND);
 
 render(mainTripComponent.element, new MainTripInfoView().element, RenderPosition.AFTERBEGIN);
+
+
 pointPresenter.init(points);
 
