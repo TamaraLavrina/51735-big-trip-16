@@ -214,6 +214,15 @@ const DESCRIPTION_CITY = [
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
 ];
 
+const PICTURES_CITY = [
+  'карсивый город',
+  'еще один красивый город',
+  'видные виды, дальние дали',
+  'удивительное место',
+  'городской вид',
+  'сельский пейзаж',
+];
+
 const MINUTES_IN_DAY = 24*60;
 const HOUR = 60;
 
@@ -224,6 +233,7 @@ export {
   additionalOffers,
   OFFERS_TYPES,
   DESCRIPTION_CITY,
+  PICTURES_CITY,
   MINUTES_IN_DAY,
   HOUR,
 };
