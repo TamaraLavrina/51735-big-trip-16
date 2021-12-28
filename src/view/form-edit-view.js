@@ -3,7 +3,7 @@ import {generateDescription, generatePicDescription, getRandomPhotos } from '../
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
 
-const createAdditionalOffer = (offers) => {
+const createAdditionalOffer = (offers, ) => {
   if (offers.length) {
     return `<div class="event__available-offers">
     ${offers.map(({title, id, price}) => `<div class="event__offer-selector">
@@ -13,7 +13,7 @@ const createAdditionalOffer = (offers) => {
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
     </label>
-  </div>`)}
+  </div>`).join('')}
     </div>`;
   }
   return '';
@@ -113,7 +113,7 @@ const createFormEditTemplate = (data) => {
 };
 
 class FormEditView extends SmartView{
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = FormEditView.parsePointToData(point);
     this.#setInnerHandlers();
@@ -121,27 +121,6 @@ class FormEditView extends SmartView{
 
   get template() {
     return createFormEditTemplate(this._data);
-  }
-
-  updateData = (update) => {
-    if (!update) {
-      return;
-    }
-
-    this._data = {...this._data, ...update};
-
-    this.updateElement();
-  }
-
-  updateElement = () => {
-    const prevElement = this.element;
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.element;
-
-    parent.replaceChild(newElement, prevElement);
-    this.restoreHandlers();
   }
 
   restoreHandlers = () => {
@@ -171,17 +150,19 @@ class FormEditView extends SmartView{
   }
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.event__type-list')
-      .addEventListener('click', this.#typeChangeHandler);
+    this.element.querySelector('.event__type-group')
+      .addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__type-input')
+      .addEventListener('change', this.#cityChangeHandler);
   }
 
   #typeChangeHandler = (evt) => {
     if (evt.target.tagName === 'INPUT') {
-      console.log(evt.target.value);
+      // console.log(evt.target.value);
       this.updateData({
         type: evt.target.value,
         // offer: создать доступные оферы,
-      },);
+      });
     }
   }
 
@@ -195,9 +176,9 @@ class FormEditView extends SmartView{
           pictures: [{
             src: getRandomPhotos(),
             description: generatePicDescription(PICTURES_CITY),
-          },],
-        },
-      },);
+          }],
+        }
+      });
     }
   }
 
@@ -207,18 +188,12 @@ class FormEditView extends SmartView{
     );
   }
 
-  static parsePointToData = (point) => Object.assign(
-    {},
-    point,
-  )
+  static parsePointToData = (point) => Object.assign(point)
 
 
-  static parseDataToPoin = (data) => {
-    data = Object.assign(
-      {},
-      data,
-    );
-    return data;
+  static parseDataToPoint = (data) => {
+    const point = {...data};
+    return point;
   }
 }
 

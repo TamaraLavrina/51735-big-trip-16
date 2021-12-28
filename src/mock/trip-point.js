@@ -77,14 +77,22 @@ const generateBlanckPoint = ()=> {
   return {
     id: nanoid(),
     type: type,
-    destination: destination,
+    destination: {
+      description: generateDescription(DESCRIPTION_CITY),
+      name: destination,
+      pictures: [
+        {
+          src: getRandomPhotos(),
+          description: generatePicDescription(PICTURES_CITY),
+        },
+      ],
+    },
     description: generateDescription(DESCRIPTION_CITY),
     basePrice: generateRandomPrice(type),
-    startDate: dayjs(),
+    startDate: date.startDate,
     finishDate: date.endDate,
     offers: (additionalOffers.find((el) => el.type === type)).offers,
     isFavorite: false,
-    photos: getRandomPhotos(),
   };
 };
 
