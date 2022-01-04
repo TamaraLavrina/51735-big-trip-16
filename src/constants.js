@@ -1,15 +1,15 @@
 const EVENT_POINT_COUNT = 20;
 
 const OfferType = {
-  TAXI: 'Taxi',
-  BUS:'Bus',
-  TRAIN:'Train',
-  SHIP:'Ship',
-  DRIVE:'Drive',
-  FLIGHT:'Flight',
-  CHECKIN:'Check-in',
-  SIGHTSEENING:'Sightseeing',
-  RESTARAUNT:'Restaurant'
+  TAXI: 'taxi',
+  BUS:'bus',
+  TRAIN:'train',
+  SHIP:'ship',
+  DRIVE:'drive',
+  FLIGHT:'flight',
+  CHECKIN:'check-in',
+  SIGHTSEENING:'sightseeing',
+  RESTARAUNT:'restaurant'
 };
 
 const OFFERS_TYPES = Object.values(OfferType);

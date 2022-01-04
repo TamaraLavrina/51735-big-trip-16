@@ -1,9 +1,9 @@
-import { CITY, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY } from '../constants.js';
+import { CITY, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY, additionalOffers } from '../constants.js';
 import {generateDescription, generatePicDescription, getRandomPhotos } from '../mock/trip-point.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
 
-const createAdditionalOffer = (offers, ) => {
+const createAdditionalOffer = (offers) => {
   if (offers.length) {
     return `<div class="event__available-offers">
     ${offers.map(({title, id, price}) => `<div class="event__offer-selector">
@@ -37,7 +37,7 @@ const createTypeList = () => (
   OFFERS_TYPES.map((type) => (
     `<div class="event__type-item">
       <input id="event-type-${type.toLowerCase()}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-taxi-1">${type}</label>
+      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}">${type}</label>
     </div>`
   )).join('')
 );
@@ -113,6 +113,7 @@ const createFormEditTemplate = (data) => {
 };
 
 class FormEditView extends SmartView{
+
   constructor(point = BLANK_POINT) {
     super();
     this._data = FormEditView.parsePointToData(point);
@@ -152,34 +153,44 @@ class FormEditView extends SmartView{
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
-    this.element.querySelector('.event__type-input')
+    this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#cityChangeHandler);
   }
 
   #typeChangeHandler = (evt) => {
     if (evt.target.tagName === 'INPUT') {
-      // console.log(evt.target.value);
+      const newType = evt.target.value;
       this.updateData({
-        type: evt.target.value,
-        // offer: создать доступные оферы,
+        type: newType,
+        offers: (additionalOffers.find((el) => el.type === newType)).offers,
       });
     }
   }
 
   #cityChangeHandler = (evt) => {
-    if(evt.target.tagName === 'INPUT') {
-      evt.preventDefault();
-      this.updateData({
-        destination: {
-          description: generateDescription(DESCRIPTION_CITY),
-          name: evt.target.value,
-          pictures: [{
-            src: getRandomPhotos(),
-            description: generatePicDescription(PICTURES_CITY),
-          }],
-        }
-      });
+    const newCity = evt.target.value;
+    const isCityExist = CITY.includes(newCity);
+    evt.preventDefault();
+    if (newCity.length <= 0 || isCityExist === false) {
+      evt.target.setCustomValidity('please select a city from the list');
+    } else {
+      evt.target.setCustomValidity('');
+      this.updateData(
+        {
+          destination: {
+            description: generateDescription(DESCRIPTION_CITY),
+            name: newCity,
+            pictures: [
+              {
+                src: getRandomPhotos(),
+                description: generatePicDescription(PICTURES_CITY),
+              },
+            ],
+          },
+        },
+      );
     }
+    evt.target.reportValidity();
   }
 
   reset = (point) => {
