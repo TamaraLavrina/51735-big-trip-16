@@ -46,4 +46,3 @@ class FilterView extends AbstractView {
 }
 
 export default FilterView;
-

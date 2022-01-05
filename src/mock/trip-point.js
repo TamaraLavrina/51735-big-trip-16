@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
-import  {CITY, POINT_PRICE, OFFERS_TYPES, DESCRIPTION_CITY, additionalOffers } from '../constants.js';
+import  {CITY, POINT_PRICE, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY, additionalOffers } from '../constants.js';
 import { getRandomInteger } from '../utils.js';
 
 
@@ -19,6 +19,10 @@ const generateDescription = (descriptionCity) => {
   return descriptionCity[randomIndex];
 };
 
+const generatePicDescription = (descriptionPic) => {
+  const randomIndex = getRandomInteger(0, descriptionPic.length - 1);
+  return descriptionPic[randomIndex];
+};
 
 const generateRandomPrice = (type) => getRandomInteger(POINT_PRICE[type].min, POINT_PRICE[type].max);
 
@@ -48,14 +52,21 @@ const generatePoint = () => {
   return {
     id: nanoid(),
     type: type,
-    destination: destination,
-    description: generateDescription(DESCRIPTION_CITY),
+    destination: {
+      description: generateDescription(DESCRIPTION_CITY),
+      name: destination,
+      pictures: [
+        {
+          src: getRandomPhotos(),
+          description: generatePicDescription(PICTURES_CITY),
+        },
+      ],
+    },
     basePrice: generateRandomPrice(type),
     startDate: date.startDate,
     finishDate: date.endDate,
     offers: (additionalOffers.find((el) => el.type === type)).offers,
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    photos: getRandomPhotos(),
   };
 };
 
@@ -66,14 +77,22 @@ const generateBlanckPoint = ()=> {
   return {
     id: nanoid(),
     type: type,
-    destination: destination,
+    destination: {
+      description: generateDescription(DESCRIPTION_CITY),
+      name: destination,
+      pictures: [
+        {
+          src: getRandomPhotos(),
+          description: generatePicDescription(PICTURES_CITY),
+        },
+      ],
+    },
     description: generateDescription(DESCRIPTION_CITY),
     basePrice: generateRandomPrice(type),
-    startDate: dayjs(),
+    startDate: date.startDate,
     finishDate: date.endDate,
     offers: (additionalOffers.find((el) => el.type === type)).offers,
     isFavorite: false,
-    photos: getRandomPhotos(),
   };
 };
 
@@ -82,7 +101,11 @@ const BLANK_POINT = generateBlanckPoint();
 export {
   generatePoint,
   getRandomPhotos,
-  BLANK_POINT
+  generateDescription,
+  BLANK_POINT,
+  generatePicDescription,
+  generateTypePoint,
+  PICTURES_CITY,
 };
 
 

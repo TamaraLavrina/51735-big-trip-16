@@ -1,15 +1,15 @@
 const EVENT_POINT_COUNT = 20;
 
 const OfferType = {
-  TAXI: 'Taxi',
-  BUS:'Bus',
-  TRAIN:'Train',
-  SHIP:'Ship',
-  DRIVE:'Drive',
-  FLIGHT:'Flight',
-  CHECKIN:'Check-in',
-  SIGHTSEENING:'Sightseeing',
-  RESTARAUNT:'Restaurant'
+  TAXI: 'taxi',
+  BUS:'bus',
+  TRAIN:'train',
+  SHIP:'ship',
+  DRIVE:'drive',
+  FLIGHT:'flight',
+  CHECKIN:'check-in',
+  SIGHTSEENING:'sightseeing',
+  RESTARAUNT:'restaurant'
 };
 
 const OFFERS_TYPES = Object.values(OfferType);
@@ -214,6 +214,15 @@ const DESCRIPTION_CITY = [
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
 ];
 
+const PICTURES_CITY = [
+  'красивый город',
+  'еще один красивый город',
+  'видные виды, дальние дали',
+  'удивительное место',
+  'городской вид',
+  'сельский пейзаж',
+];
+
 const MINUTES_IN_DAY = 24*60;
 const HOUR = 60;
 
@@ -232,6 +241,7 @@ export {
   additionalOffers,
   OFFERS_TYPES,
   DESCRIPTION_CITY,
+  PICTURES_CITY,
   MINUTES_IN_DAY,
   HOUR,
   SortType,

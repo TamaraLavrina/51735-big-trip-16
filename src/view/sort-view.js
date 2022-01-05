@@ -10,7 +10,6 @@ const createMainSortTemplate = () => {
   </div>`).join('')}
   </form>`;};
 
-
 class SortView extends AbstractView {
   get template() {
     return createMainSortTemplate();
@@ -29,7 +28,6 @@ class SortView extends AbstractView {
     }
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-
   }
 }
 
