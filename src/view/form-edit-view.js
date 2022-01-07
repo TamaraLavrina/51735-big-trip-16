@@ -3,6 +3,10 @@ import {generateDescription, generatePicDescription, getRandomPhotos } from '../
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
 
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
+
 const createAdditionalOffer = (offers) => {
   if (offers.length) {
     return `<div class="event__available-offers">
@@ -112,20 +116,40 @@ const createFormEditTemplate = (data) => {
 </li>`;
 };
 
-class FormEditView extends SmartView{
+class FormEditView extends SmartView {
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor(point = BLANK_POINT) {
     super();
     this._data = FormEditView.parsePointToData(point);
     this.#setInnerHandlers();
+    this.#setDatepicker();
   }
 
   get template() {
     return createFormEditTemplate(this._data);
   }
 
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+
+    if(this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
+
   restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setRollUpClickHandler(this._callback.rollUpClickHandler);
   }
@@ -150,6 +174,48 @@ class FormEditView extends SmartView{
     this._callback.rollUpClickHandler();
   }
 
+  #setDatepicker = () => {
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
+  }
+
+  #setDatepickerFrom = () => {
+    if (this._data.startDate) {
+      this.#datepickerFrom = flatpickr(
+        this.element.querySelector('input[name="event-start-time"]'),
+        {
+          dateFormat: 'd/m/Y H:i',
+          defaultDate: this._data.startDate,
+          onChange: this.#dateFromChangeHandler,
+        },
+      );}
+  }
+
+  #setDatepickerTo = () => {
+    if (this._data.finishDate) {
+      this.#datepickerTo = flatpickr(
+        this.element.querySelector('input[name="event-end-time"]'),
+        {
+          dateFormat: 'd/m/Y H:i',
+          defaultDate: this._data.finishDate,
+          onChange: this.#dateToChangeHandler,
+        },
+      );
+    }
+  }
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateData({
+      startDate: userDate,
+    });
+  }
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateData({
+      finishDate: userDate,
+    });
+  }
+
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group')
       .addEventListener('change', this.#typeChangeHandler);
@@ -171,7 +237,7 @@ class FormEditView extends SmartView{
     const newCity = evt.target.value;
     const isCityExist = CITY.includes(newCity);
     evt.preventDefault();
-    if (newCity.length <= 0 || isCityExist === false) {
+    if (newCity.length <= 0 || !isCityExist) {
       evt.target.setCustomValidity('please select a city from the list');
     } else {
       evt.target.setCustomValidity('');
@@ -180,15 +246,12 @@ class FormEditView extends SmartView{
           destination: {
             description: generateDescription(DESCRIPTION_CITY),
             name: newCity,
-            pictures: [
-              {
-                src: getRandomPhotos(),
-                description: generatePicDescription(PICTURES_CITY),
-              },
-            ],
-          },
-        },
-      );
+            pictures: [{
+              src: getRandomPhotos(),
+              description: generatePicDescription(PICTURES_CITY),
+            }]
+          }
+        });
     }
     evt.target.reportValidity();
   }
@@ -199,13 +262,8 @@ class FormEditView extends SmartView{
     );
   }
 
-  static parsePointToData = (point) => Object.assign(point)
-
-
-  static parseDataToPoint = (data) => {
-    const point = {...data};
-    return point;
-  }
+  static parsePointToData = (point) => point
+  static parseDataToPoint = (data) => data
 }
 
 
