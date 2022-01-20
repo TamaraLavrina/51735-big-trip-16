@@ -152,6 +152,7 @@ class FormEditView extends SmartView {
     this.#setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setRollUpClickHandler(this._callback.rollUpClickHandler);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   setFormSubmitHandler = (callback) => {
@@ -260,6 +261,16 @@ class FormEditView extends SmartView {
     this.updateData(
       FormEditView.parsePointToData(point),
     );
+  }
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(FormEditView.parseDataToPoint(this._data));
+  }
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
   }
 
   static parsePointToData = (point) => point

@@ -2,7 +2,7 @@ import dayjs  from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import AbstractView from './abstract-view.js';
-import { countDuration } from '../utils.js';
+import { countDuration } from '../utils/utils.js';
 
 const createPointTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, offers, isFavorite} = point;

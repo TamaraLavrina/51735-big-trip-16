@@ -1,4 +1,4 @@
-const EVENT_POINT_COUNT = 20;
+const EVENT_POINT_COUNT = 7;
 
 const OfferType = {
   TAXI: 'taxi',
@@ -234,6 +234,24 @@ const SortType = {
   OFFERS: 'offers',
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
 export {
   CITY,
   EVENT_POINT_COUNT,
@@ -245,5 +263,8 @@ export {
   MINUTES_IN_DAY,
   HOUR,
   SortType,
+  UserAction,
+  UpdateType,
+  FilterType
 };
 

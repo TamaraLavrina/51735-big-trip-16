@@ -1,6 +1,7 @@
 import PointView from '../view/point-view.js';
 import FormEditView from '../view/form-edit-view.js';
-import {render, RenderPosition, replace, remove} from '../render.js';
+import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import {UserAction, UpdateType} from '../constants.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -36,6 +37,7 @@ class PointPresenter {
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setRollUpClickHandler(this.#handleRollUpClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFOREEND);
@@ -92,7 +94,11 @@ class PointPresenter {
   }
 
   #handleFormSubmit = (point) => {
-    this.#changeData(point);
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
     this.#replaceFormToCard();
   }
 
@@ -102,8 +108,21 @@ class PointPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   }
+
+  #handleDeleteClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
+  }
+
 }
 
 export default PointPresenter;

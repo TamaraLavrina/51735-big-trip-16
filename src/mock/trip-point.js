@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
 import  {CITY, POINT_PRICE, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY, additionalOffers } from '../constants.js';
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/utils.js';
 
 
 const generateTypePoint = (type) => {
@@ -36,7 +36,7 @@ const getRandomPhotos = () => {
 };
 
 const generateDate = () => {
-  const randomInterval = getRandomInteger(15, 43200);
+  const randomInterval = getRandomInteger(-2880, 2880);
   const randomDuration = getRandomInteger(15, 360);
 
   return {
