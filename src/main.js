@@ -21,8 +21,6 @@ const header = document.querySelector('.page-header__container');
 const pageBody = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
 const mainTripComponent = new MainTripView();
 const pointPresenter = new TripListPresenter(pageBody, mainTripComponent, pointsModel, filterModel);
-
-
 const controls = mainTripComponent.element.querySelector('.trip-main__trip-controls');
 
 render(header, mainTripComponent, RenderPosition.BEFOREEND );
@@ -31,7 +29,10 @@ render(controls, new SiteMenuView(), RenderPosition.BEFOREEND);
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 
 filterPresenter.init();
-
-
 pointPresenter.init();
+
+document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  evt.preventDefault();
+  TripListPresenter.createPoint();
+});
 

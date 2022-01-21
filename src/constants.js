@@ -1,4 +1,4 @@
-const EVENT_POINT_COUNT = 7;
+const EVENT_POINT_COUNT = 3;
 
 const OfferType = {
   TAXI: 'taxi',

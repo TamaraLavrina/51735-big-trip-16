@@ -2,6 +2,7 @@ import { CITY, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY, additionalOffers }
 import {generateDescription, generatePicDescription, getRandomPhotos } from '../mock/trip-point.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
+import he from 'he';
 
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -25,7 +26,7 @@ const createAdditionalOffer = (offers) => {
 
 const createCityList = () => (
   CITY.map((city) => (
-    `<option value="${city}"></option>`
+    `<option value="${he.encode(city)}"></option>`
   )).join('')
 );
 
@@ -93,7 +94,7 @@ const createFormEditTemplate = (data) => {
           <span class="visually-hidden">${basePrice}</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

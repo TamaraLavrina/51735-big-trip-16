@@ -3,10 +3,10 @@ import EventBoard from '../view/event-board-view.js';
 import SortView from '../view/sort-view.js';
 import EmptyList from '../view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
+import PointNewPresenter from './point-new-presenter.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
-// import { updateItem } from '../utils.js';
 import MainTripInfoView from '../view/main-trip-info.js';
-import { SortType, UpdateType, UserAction, EVENT_POINT_COUNT } from '../constants.js';
+import { SortType, UpdateType, UserAction, EVENT_POINT_COUNT, FilterType } from '../constants.js';
 import { sortPointPrice, sortPointDay, sortPointTime } from '../utils/utils.js';
 import {filter} from '../utils/filter.js';
 
@@ -24,7 +24,9 @@ class TripListPresenter {
 
   #renderedPointCount = EVENT_POINT_COUNT;
   #pointPresenter = new Map();
+  #pointNewPresenter = null;
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
   #tripInfoComponent = null;
 
   constructor(tripListContainer, routContainer, pointsModel, filterModel) {
@@ -33,14 +35,16 @@ class TripListPresenter {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
+    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.#handleViewAction);
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.PRICE:{
         return filteredPoints.sort(sortPointPrice);
@@ -61,7 +65,14 @@ class TripListPresenter {
     this.#renderBoard();
   }
 
+  createPoint = () => {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#pointNewPresenter.init();
+  }
+
   #handleModeChange = () => {
+    this.#pointNewPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
@@ -139,6 +150,7 @@ class TripListPresenter {
   }
 
   #renderNoPoints = () => {
+    this.#noPointsComponent = new EmptyList(this.#filterType);
     render(this.#boardComponent, this.#noPointsComponent, RenderPosition.AFTERBEGIN);
   }
 
@@ -151,12 +163,17 @@ class TripListPresenter {
   #clearBoard = ({resetRenderedPointCount = false, resetSortType = false} = {}) => {
     const pointCount = this.points.length;
 
+    this.#pointNewPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
     remove(this.#noPointsComponent);
     remove(this.#tripInfoComponent);
+
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
 
     if (resetRenderedPointCount) {
       this.#renderedPointCount = EVENT_POINT_COUNT;
