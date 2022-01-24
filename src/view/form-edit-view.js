@@ -226,6 +226,8 @@ class FormEditView extends SmartView {
       .addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#cityChangeHandler);
+    this.element.querySelector('.event__available-offers')
+      .addEventListener('change', this.#offerChangeHandler);
   }
 
   #typeChangeHandler = (evt) => {
@@ -259,6 +261,15 @@ class FormEditView extends SmartView {
         });
     }
     evt.target.reportValidity();
+  }
+
+  #offerChangeHandler = (evt) => {
+    evt.preventDefault();
+    const checkedOffers = Array.from(document.querySelectorAll('.event__offer-checkbox:checked'));
+
+    this.updateData({
+      offers: checkedOffers,
+    }, true);
   }
 
   reset = (point) => {

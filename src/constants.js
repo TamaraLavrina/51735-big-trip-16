@@ -252,6 +252,11 @@ const FilterType = {
   PAST: 'past',
 };
 
+const MenuItem = {
+  TABLE: 'Table',
+  STATS: 'Stats',
+};
+
 export {
   CITY,
   EVENT_POINT_COUNT,
@@ -265,6 +270,7 @@ export {
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  MenuItem
 };
 

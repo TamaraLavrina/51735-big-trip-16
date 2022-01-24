@@ -9,18 +9,20 @@ class PointNewPresenter {
   #changeData = null;
 
   #pointEditComponent = null;
+  #destroyCallback = null;
 
   constructor(pointListContainer, changeData) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
   }
 
-  init = (offers) => {
+  init = (callback) => {
+    this.#destroyCallback = callback;
     if (this.#pointEditComponent !== null) {
       return;
     }
 
-    this.#pointEditComponent = new FormEditView({offers});
+    this.#pointEditComponent = new FormEditView({});
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
@@ -33,6 +35,8 @@ class PointNewPresenter {
     if (this.#pointEditComponent === null) {
       return;
     }
+
+    this.#destroyCallback?.();
 
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;

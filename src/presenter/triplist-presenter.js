@@ -72,11 +72,11 @@ class TripListPresenter {
     this.#renderBoard();
   }
 
-  createPoint = () => {
+  createPoint = (callback) => {
     this.#currentSortType = SortType.DAY;
     this.#offers = this.#offersModel.offers;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#pointNewPresenter.init(this.offers);
+    this.#pointNewPresenter.init(callback);
   }
 
   #handleModeChange = () => {
