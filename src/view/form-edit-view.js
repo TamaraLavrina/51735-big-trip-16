@@ -12,7 +12,7 @@ const createAdditionalOffer = (offers) => {
   if (offers.length) {
     return `<div class="event__available-offers">
     ${offers.map(({title, id, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" checked>
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" >
     <label class="event__offer-label" for="event-offer-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
@@ -120,16 +120,19 @@ const createFormEditTemplate = (data) => {
 class FormEditView extends SmartView {
   #datepickerFrom = null;
   #datepickerTo = null;
+  #offers = null;
 
-  constructor(point = BLANK_POINT) {
+  constructor(data) {
     super();
+    const {point = BLANK_POINT, offers} = data;
     this._data = FormEditView.parsePointToData(point);
     this.#setInnerHandlers();
     this.#setDatepicker();
+    this.#offers = offers;
   }
 
   get template() {
-    return createFormEditTemplate(this._data);
+    return createFormEditTemplate(this._data, this.#offers);
   }
 
   removeElement = () => {

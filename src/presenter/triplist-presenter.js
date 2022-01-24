@@ -16,6 +16,8 @@ class TripListPresenter {
   #routContainer = null;
   #pointsModel = null;
   #filterModel = null;
+  #offersModel = null;
+  #offers = null;
 
   #boardComponent = new EventBoard();
   #tripListComponent = new EventSked();
@@ -29,16 +31,18 @@ class TripListPresenter {
   #filterType = FilterType.EVERYTHING;
   #tripInfoComponent = null;
 
-  constructor(tripListContainer, routContainer, pointsModel, filterModel) {
+  constructor(tripListContainer, routContainer, pointsModel, filterModel, offersModel) {
     this.#tripListContainer = tripListContainer;
     this.#routContainer = routContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#offersModel = offersModel;
 
     this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#offersModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -48,16 +52,19 @@ class TripListPresenter {
     switch (this.#currentSortType) {
       case SortType.PRICE:{
         return filteredPoints.sort(sortPointPrice);
-        // break;
       }
       case SortType.TIME:{
         return filteredPoints.sort(sortPointTime);
-        // break;
       }
       default:{
         return filteredPoints.sort(sortPointDay);
       }
     }
+  }
+
+  get offers() {
+    this.#offers = this.#offersModel.offers;
+    return this.#offers;
   }
 
   init = () => {
@@ -67,8 +74,9 @@ class TripListPresenter {
 
   createPoint = () => {
     this.#currentSortType = SortType.DAY;
+    this.#offers = this.#offersModel.offers;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#pointNewPresenter.init();
+    this.#pointNewPresenter.init(this.offers);
   }
 
   #handleModeChange = () => {
@@ -140,8 +148,9 @@ class TripListPresenter {
   }
 
   #renderPoint = (point) => {
+    this.#offers = this.#offersModel.offers;
     const pointPresenter = new PointPresenter(this.#tripListComponent, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point, this.#offers);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 

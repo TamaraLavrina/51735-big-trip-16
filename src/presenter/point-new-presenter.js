@@ -15,12 +15,12 @@ class PointNewPresenter {
     this.#changeData = changeData;
   }
 
-  init = () => {
+  init = (offers) => {
     if (this.#pointEditComponent !== null) {
       return;
     }
 
-    this.#pointEditComponent = new FormEditView();
+    this.#pointEditComponent = new FormEditView({offers});
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
@@ -43,7 +43,7 @@ class PointNewPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      Object.assign({id: nanoid()}, point),
     );
     this.destroy();
   }
