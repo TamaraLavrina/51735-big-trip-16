@@ -9,6 +9,7 @@ import MainTripInfoView from '../view/main-trip-info.js';
 import { SortType, UpdateType, UserAction, EVENT_POINT_COUNT, FilterType } from '../constants.js';
 import { sortPointPrice, sortPointDay, sortPointTime } from '../utils/utils.js';
 import {filter} from '../utils/filter.js';
+// import { BLANK_POINT } from '../mock/trip-point.js';
 
 
 class TripListPresenter {
@@ -70,14 +71,32 @@ class TripListPresenter {
   init = () => {
     render(this.#tripListContainer, this.#boardComponent, RenderPosition.BEFOREEND);
     this.#renderBoard();
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+  }
+
+  destroy = () => {
+    this.#clearBoard({resetRenderedPointCount: true, resetSortType: true});
+
+    remove(this.#tripListComponent);
+    remove(this.#boardComponent);
+
+    this.#pointsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
   }
 
   createPoint = (callback) => {
     this.#currentSortType = SortType.DAY;
     this.#offers = this.#offersModel.offers;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#pointNewPresenter.init(callback);
+    this.#filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
+    if (!this.#tripListContainer.contains(this.#tripListComponent.element)) {
+      this.#renderList();
+    }
+    this.#pointNewPresenter.init(this.#offers, callback);
+
+    remove(this.#noPointsComponent);
   }
+
 
   #handleModeChange = () => {
     this.#pointNewPresenter.destroy();
@@ -132,6 +151,7 @@ class TripListPresenter {
   }
 
   #renderSort = () => {
+    remove(this.#sortComponent);
     this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
     render(this.#boardComponent, this.#sortComponent, RenderPosition.AFTERBEGIN);

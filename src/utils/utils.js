@@ -34,11 +34,14 @@ const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 const sortPointTime = (pointA, pointB) => getDiffTimePoint(pointB.startDate, pointB.finishDate) - getDiffTimePoint(pointA.startDate, pointA.finishDate);
 const sortPointDay = (pointA, pointB) => pointA.finishDate - pointB.startDate;
 
+const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
+
 export {getRandomInteger,
   isFuture,
   isPointPast,
   sortPointPrice,
   sortPointDay,
   sortPointTime,
-  countDuration
+  countDuration,
+  capitalizeFirstLetter
 };

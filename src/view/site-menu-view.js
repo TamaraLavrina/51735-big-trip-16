@@ -18,7 +18,7 @@ class SiteMenuView extends AbstractView {
 
   setMenuClickHandler = (callback) => {
     this._callback.menuClick = callback;
-    this.element.addEventListener('change', this.#menuClickHandler);
+    this.element.addEventListener('click', this.#menuClickHandler);
   }
 
   setMenuItem = (menuItem) => {
@@ -31,7 +31,7 @@ class SiteMenuView extends AbstractView {
 
   #menuClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.menuClick(evt.target.value);
+    this._callback.menuClick(evt.target.text);
   }
 }
 export default SiteMenuView;

@@ -253,6 +253,7 @@ const FilterType = {
 };
 
 const MenuItem = {
+  // ADD_NEW_EVENT: 'add-new-point',
   TABLE: 'Table',
   STATS: 'Stats',
 };

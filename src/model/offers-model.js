@@ -3,11 +3,11 @@ import AbstractObservable from '../abstract-observable.js';
 class OffersModel extends AbstractObservable {
   #offers = [];
 
-  set Offers(offers) {
+  set offers(offers) {
     this.#offers = offers;
   }
 
-  get Offers() {
+  get offers() {
     return this.#offers;
   }
 }

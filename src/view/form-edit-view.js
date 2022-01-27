@@ -7,12 +7,23 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
+const addNewEventButton = document.querySelector('.trip-main__event-add-btn  btn  btn--big  btn--yellow');
+
+const createEventRollupButtonTemplate = (isNewEvent) => (
+  `${!isNewEvent ? `<button class="event__rollup-btn" type="button">
+    <span class="visually-hidden">Open event</span>
+  </button>`: ''}`
+);
+
+const createContentButton = (isNewEvent) => (
+  `${isNewEvent ? 'Cancel' : 'Delete'}`
+);
 
 const createAdditionalOffer = (offers) => {
   if (offers.length) {
     return `<div class="event__available-offers">
     ${offers.map(({title, id, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" >
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" data-title="${title.toLowerCase()}" data-price="${price}" >
     <label class="event__offer-label" for="event-offer-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
@@ -47,22 +58,29 @@ const createTypeList = () => (
   )).join('')
 );
 
-const createFormEditTemplate = (data) => {
-  const {type, basePrice, startDate, finishDate, destination, offers} = data;
+const createFormEditTemplate = (data,  isNewPoint) => {
+  const {type, basePrice, startDate, finishDate, destination, offers, id} = data;
   const offersTemplate = createAdditionalOffer(offers);
   const cityList = createCityList();
   const typesList = createTypeList();
+  const eventRollupButton = createEventRollupButtonTemplate(isNewPoint);
+  const buttonText = createContentButton(isNewPoint);
   const destinationPhotos = createDestinationalPhoto(destination.pictures);
+  let showDestination = '';
+
+  if (destination.name.length === 0) {
+    showDestination = 'visually-hidden';
+  }
+
   return  `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
-        <label class="event__type  event__type-btn" for="event-type-toggle-1">
+        <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
         </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
@@ -70,25 +88,22 @@ const createFormEditTemplate = (data) => {
           </fieldset>
         </div>
       </div>
-
       <div class="event__field-group  event__field-group--destination">
-        <label class="event__label  event__type-output" for="event-destination-1">
+        <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
-        <datalist id="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-${id}}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}}">
+        <datalist id="destination-list-${id}">
         ${cityList}
         </datalist>
       </div>
-
       <div class="event__field-group  event__field-group--time">
-        <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
+        <label class="visually-hidden" for="event-start-time-${id}}">From</label>
+        <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${startDate}">
         &mdash;
-        <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${finishDate}">
+        <label class="visually-hidden" for="event-end-time-${id}">To</label>
+        <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${finishDate}">
       </div>
-
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">${basePrice}</span>
@@ -96,18 +111,15 @@ const createFormEditTemplate = (data) => {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
-
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
+      <button class="event__reset-btn" type="reset">${buttonText}</button>
+      ${eventRollupButton}
     </header>
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">${offersTemplate}</div></section>
-        <section class="event__section  event__section--destination">
+        <section class="event__section  event__section--destination ${showDestination}">
           <h3 class="event__section-title  event__section-title--destination">${destination.name}</h3>
           <p class="event__destination-description">${destination.description}</p>
           ${destinationPhotos}
@@ -117,22 +129,30 @@ const createFormEditTemplate = (data) => {
 </li>`;
 };
 
+
 class FormEditView extends SmartView {
   #datepickerFrom = null;
   #datepickerTo = null;
+
   #offers = null;
+  #newPoint = null;
 
   constructor(data) {
     super();
     const {point = BLANK_POINT, offers} = data;
+    //вот если в консруктор передаю дату то в списке при открытие не текущие точки,
+    // а бланк пойнт как и следовало ожидать и отредактировать их невозможно, ну и сохранение не работает?
+    //как починить открытие формы редактивание для уже существующих точек
     this._data = FormEditView.parsePointToData(point);
+    this.#newPoint = !point;
     this.#setInnerHandlers();
     this.#setDatepicker();
     this.#offers = offers;
   }
 
   get template() {
-    return createFormEditTemplate(this._data, this.#offers);
+    const isNewPoint = (this._newPoint);
+    return createFormEditTemplate(this._data, this.#offers, isNewPoint);
   }
 
   removeElement = () => {
@@ -143,13 +163,11 @@ class FormEditView extends SmartView {
       this.#datepickerFrom = null;
     }
 
-
     if(this.#datepickerTo) {
       this.#datepickerTo.destroy();
       this.#datepickerTo = null;
     }
   }
-
 
   restoreHandlers = () => {
     this.#setInnerHandlers();
@@ -171,7 +189,9 @@ class FormEditView extends SmartView {
 
   setRollUpClickHandler = (callback) => {
     this._callback.rollUpClickHandler = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpClickHandler);
+    if (this.element.querySelector('.event__rollup-btn')) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpClickHandler);
+    }
   }
 
   #rollUpClickHandler = (evt) => {
@@ -189,7 +209,9 @@ class FormEditView extends SmartView {
       this.#datepickerFrom = flatpickr(
         this.element.querySelector('input[name="event-start-time"]'),
         {
-          dateFormat: 'd/m/Y H:i',
+          dateFormat: 'd/m/y H:i',
+          enableTime: true,
+          ['time_24hr']: true,
           defaultDate: this._data.startDate,
           onChange: this.#dateFromChangeHandler,
         },
@@ -201,7 +223,9 @@ class FormEditView extends SmartView {
       this.#datepickerTo = flatpickr(
         this.element.querySelector('input[name="event-end-time"]'),
         {
-          dateFormat: 'd/m/Y H:i',
+          dateFormat: 'd/m/y H:i',
+          enableTime: true,
+          ['time_24hr']: true,
           defaultDate: this._data.finishDate,
           onChange: this.#dateToChangeHandler,
         },
@@ -228,6 +252,9 @@ class FormEditView extends SmartView {
       .addEventListener('change', this.#cityChangeHandler);
     this.element.querySelector('.event__available-offers')
       .addEventListener('change', this.#offerChangeHandler);
+    this.element.querySelector('.event__input--price').
+      addEventListener('input', this.#priceChangeHandler);
+
   }
 
   #typeChangeHandler = (evt) => {
@@ -265,11 +292,55 @@ class FormEditView extends SmartView {
 
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
-    const checkedOffers = Array.from(document.querySelectorAll('.event__offer-checkbox:checked'));
+
+    /*
+    вот тут не понимаю как правильно написать фильтр, что-то туплю....
+    console.log(this._data.offers);
+    console.log('дата');
+    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    console.log(checkedOffers);
+    const offerIds = checkedOffers.map((element) => element.dataset.id);
+    console.log(offerIds);
+    console.log('чекнутые айди');
+    const updatedOffers = this._data.offers.filter((item) => item.id === offerIds);
+    console.log(updatedOffers);
+    console.log('фильтрованные офферы');
+    еще непонятно что произошло с состоянием checked - задавать заново?
+    const newOffers = evt.target;
+    newOffers.setAttribute('checked' , '');
+    */
+
+    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox'));
+    const currentOffers = [];
+    checkedOffers.forEach((offer) => {
+      if(offer.checked) {
+        currentOffers.push({
+          id: offer.dataset.id,
+          title: offer.dataset.title,
+          price: Number(offer.dataset.price),
+        });
+      }});
 
     this.updateData({
-      offers: checkedOffers,
-    }, true);
+      offers: currentOffers,
+      isOffers: currentOffers.length !== 0,
+      //была мысль сохранять в дате и передавать потом в разметку,
+      // в класс секции офферов - нет оферов, то и не рисовать секцию - visually-hidden
+      // однако если ставить сразу, то вообще перестает отображать
+    });
+  }
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.value <= 0 || isNaN(evt.target.value)) {
+      evt.target.setCustomValidity('Цена может быть только положительным числом');
+    } else {
+      evt.target.setCustomValidity('');
+      this.updateData({
+        basePrice: + Number(evt.target.value),
+      }, true);
+    }
+    evt.target.reportValidity();
   }
 
   reset = (point) => {
@@ -281,6 +352,7 @@ class FormEditView extends SmartView {
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(FormEditView.parseDataToPoint(this._data));
+    addNewEventButton.disabled = false;
   }
 
   setDeleteClickHandler = (callback) => {
@@ -292,5 +364,6 @@ class FormEditView extends SmartView {
   static parseDataToPoint = (data) => data
 }
 
-
 export default FormEditView;
+
+

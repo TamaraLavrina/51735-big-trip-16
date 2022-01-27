@@ -14,9 +14,6 @@ class FilterPresenter {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#pointsModel = pointsModel;
-
-    this.#filterModel.addObserver(this.#handleModelEvent);
-    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   get filters() {
@@ -47,6 +44,9 @@ class FilterPresenter {
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
+    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+
     if (prevFilterComponent === null) {
       render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
       return;
@@ -54,6 +54,16 @@ class FilterPresenter {
 
     replace(this.#filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
+  }
+
+  destroy = () => {
+    remove(this.#filterComponent);
+    this.#filterComponent = null;
+
+    this.#pointsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
+
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   }
 
   #handleModelEvent = () => {

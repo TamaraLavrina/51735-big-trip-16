@@ -35,11 +35,11 @@ const createPointTemplate = (point) => {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${offers.map((offer) =>
+    ${offers.map((item) =>
     `<li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
+      <span class="event__offer-title">${item.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
+      <span class="event__offer-price">${item.price}</span>
     </li>`).join('')
 }
     </ul>

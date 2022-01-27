@@ -16,13 +16,16 @@ class PointNewPresenter {
     this.#changeData = changeData;
   }
 
-  init = (callback) => {
-    this.#destroyCallback = callback;
+  init = ( callback) => {
+    //сюда кмк должны приходить офферы, и в формедитвью передаваться, но так не работает((
+    // init = (offers, callback) => {
     if (this.#pointEditComponent !== null) {
       return;
     }
+    this.#destroyCallback = callback;
 
     this.#pointEditComponent = new FormEditView({});
+    // this.#pointEditComponent = new FormEditView({offers});
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
@@ -34,6 +37,10 @@ class PointNewPresenter {
   destroy = () => {
     if (this.#pointEditComponent === null) {
       return;
+    }
+
+    if (this.#destroyCallback !== null) {
+      this.#destroyCallback();
     }
 
     this.#destroyCallback?.();
