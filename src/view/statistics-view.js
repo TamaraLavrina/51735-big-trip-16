@@ -12,7 +12,6 @@ const CanvasType = {
 };
 
 const makeItemsUniq = (items) => [...new Set(items)];
-
 const getDurationTime = (ms) => {
   const days = dayjs.duration(ms).format('D');
   const hours = dayjs.duration(ms).format('HH');
@@ -258,7 +257,7 @@ const createStatisticsTemplate = () => {
 </section>`;
 };
 
-export default class Statistics extends SmartView {
+class Statistics extends SmartView {
     #renderMoneyChart = null;
     #renderTypeChart = null;
     #renderTimeChart = null;
@@ -316,4 +315,6 @@ export default class Statistics extends SmartView {
       this.setCharts();
     }
 }
+
+export default  Statistics;
 

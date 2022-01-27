@@ -32,7 +32,7 @@ const newPointButton = document.querySelector('.trip-main__event-add-btn');
 
 const handlePointNewFormClose = () => {
   siteMenuComponent.element.querySelector(`[value=${MenuItem.TABLE}]`).disabled = false;
-  siteMenuComponent.element.querySelector(`[value=${MenuItem.STATISTICS}]`).disabled = false;
+  siteMenuComponent.element.querySelector(`[value=${MenuItem.STATS}]`).disabled = false;
   newPointButton.disabled = false;
 };
 
