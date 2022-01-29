@@ -73,6 +73,7 @@ const handleSiteMenuClick = (menuItem) => {
 
 newPointButton.addEventListener('click', (evt) => {
   evt.preventDefault();
+  newPointButton.disabled = true;
   // tripListPresenter.destroy();
   // tripListPresenter.init();
   tripListPresenter.createPoint(handlePointNewFormClose);

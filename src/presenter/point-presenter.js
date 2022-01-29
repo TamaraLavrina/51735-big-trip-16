@@ -2,6 +2,7 @@ import PointView from '../view/point-view.js';
 import FormEditView from '../view/form-edit-view.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import {UserAction, UpdateType} from '../constants.js';
+// import { destinations } from '../mock/trip-point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -17,6 +18,7 @@ class PointPresenter {
   #pointEditComponent = null;
   #point = null;
   #offers = null;
+  #destinations = null;
   #mode = Mode.DEFAULT
 
   constructor(pointListContainer, changeData, changeMode) {
@@ -25,9 +27,10 @@ class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (point, offers) => {
+  init = (point, offers, destinations) => {
     this.#point = point;
     this.#offers = offers;
+    this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
@@ -35,7 +38,7 @@ class PointPresenter {
     this.#pointComponent = new PointView(point);
     // console.log('офферы, которые передали в пойнт презентере.инит');
     // console.log(this.#offers);
-    this.#pointEditComponent = new FormEditView(point, this.#offers);
+    this.#pointEditComponent = new FormEditView(point, this.#offers, this.#destinations);
 
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);

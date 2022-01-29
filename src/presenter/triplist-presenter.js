@@ -9,7 +9,6 @@ import MainTripInfoView from '../view/main-trip-info.js';
 import { SortType, UpdateType, UserAction, EVENT_POINT_COUNT, FilterType } from '../constants.js';
 import { sortPointPrice, sortPointDay, sortPointTime } from '../utils/utils.js';
 import {filter} from '../utils/filter.js';
-// import { BLANK_POINT } from '../mock/trip-point.js';
 
 
 class TripListPresenter {
@@ -18,7 +17,9 @@ class TripListPresenter {
   #pointsModel = null;
   #filterModel = null;
   #offersModel = null;
+  #destinationsModel = null;
   #offers = null;
+  #destinations = null;
 
   #boardComponent = new EventBoard();
   #tripListComponent = new EventSked();
@@ -32,20 +33,22 @@ class TripListPresenter {
   #filterType = FilterType.EVERYTHING;
   #tripInfoComponent = null;
 
-  constructor(tripListContainer, routContainer, pointsModel, filterModel, offersModel) {
+  constructor(tripListContainer, routContainer, pointsModel, filterModel, offersModel, destinationsModel) {
     this.#tripListContainer = tripListContainer;
     this.#routContainer = routContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
     this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
 
+    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.offers, this.destinations, this.#handleViewAction);
 
-    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.offers,  this.#handleViewAction);
     // вот смюда придут
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#offersModel.addObserver(this.#handleModelEvent);
+    this.#destinationsModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -69,12 +72,18 @@ class TripListPresenter {
     return this.#offersModel.offers;
   }
 
+  get destinations() {
+    return this.#destinationsModel.destinations;
+  }
+
+
   init = () => {
     render(this.#tripListContainer, this.#boardComponent, RenderPosition.BEFOREEND);
     this.#renderBoard();
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#offersModel.addObserver(this.#handleModelEvent);
+    this.#destinationsModel.addObserver(this.#handleModelEvent);
   }
 
   destroy = () => {
@@ -85,11 +94,14 @@ class TripListPresenter {
 
     this.#pointsModel.removeObserver(this.#handleModelEvent);
     this.#filterModel.removeObserver(this.#handleModelEvent);
+    this.#offersModel.removeObserver(this.#handleModelEvent);
+    this.#destinationsModel.removeObserver(this.#handleModelEvent);
   }
 
   createPoint = (callback) => {
     this.#currentSortType = SortType.DAY;
     this.#offers = this.#offersModel.offers;
+    this.#destinations = this.#destinationsModel.destinations;
     this.#filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
     if (!this.#tripListContainer.contains(this.#tripListComponent.element)) {
       this.#renderList();
@@ -171,14 +183,11 @@ class TripListPresenter {
 
   #renderPoint = (point) => {
     this.#offers = this.#offersModel.offers;
-    // console.log('рендер точки в триплисте - презентере');
-    // console.log(this.#offers);
+    this.#destinations = this.#destinationsModel.destinations;
 
 
     const pointPresenter = new PointPresenter(this.#tripListComponent, this.#handleViewAction, this.#handleModeChange);
-    // console.log('смотрим что пойнт презентер.инит передаем');
-    // console.log(this.#offers);
-    pointPresenter.init(point, this.#offers); //смотрим что пойнт презентере
+    pointPresenter.init(point, this.#offers, this.#destinations);
 
     this.#pointPresenter.set(point.id, pointPresenter);
   }

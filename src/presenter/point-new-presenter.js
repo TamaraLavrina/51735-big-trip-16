@@ -11,10 +11,12 @@ class PointNewPresenter {
   #pointEditComponent = null;
   #destroyCallback = null;
   #offers = null;
+  #destinations = null;
 
-  constructor(pointListContainer, offers, changeData) {
+  constructor(pointListContainer, offers, destinations, changeData) {
     this.#pointListContainer = pointListContainer;
     this.#offers = offers;
+    this.#destinations = destinations;
     this.#changeData = changeData;
 
   }
@@ -25,8 +27,7 @@ class PointNewPresenter {
     }
     this.#destroyCallback = callback;
 
-    this.#pointEditComponent = new FormEditView(null, this.#offers);
-    //вот сюда тоже прокинуть
+    this.#pointEditComponent = new FormEditView(null, this.#offers, this.#destinations);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 

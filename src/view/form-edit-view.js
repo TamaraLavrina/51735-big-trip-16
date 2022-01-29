@@ -1,5 +1,5 @@
-import { CITY, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY} from '../constants.js';
-import {generateDescription, generatePicDescription, getRandomPhotos } from '../mock/trip-point.js';
+import { CITY, OFFERS_TYPES} from '../constants.js';
+// import {generateDescription, generatePicDescription, getRandomPhotos } from '../mock/trip-point.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
 import he from 'he';
@@ -7,17 +7,7 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const addNewEventButton = document.querySelector('.trip-main__event-add-btn  btn  btn--big  btn--yellow');
-
-const createEventRollupButtonTemplate = (isNewEvent) => (
-  `${!isNewEvent ? `<button class="event__rollup-btn" type="button">
-    <span class="visually-hidden">Open event</span>
-  </button>`: ''}`
-);
-
-const createContentButton = (isNewEvent) => (
-  `${isNewEvent ? 'Cancel' : 'Delete'}`
-);
+const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 
 const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
   const isSelected = currentPointOffers.some((offer) => offer.id === possibleProposal.id);
@@ -26,11 +16,10 @@ const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
 };
 
 const createAdditionalOffer = (currentPointOffers, possibleProposals ) => {
-  console.log(currentPointOffers, possibleProposals);
-
   if (!possibleProposals.length) {
     return '';
   }
+
   return `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
@@ -60,10 +49,23 @@ const createCityList = () => (
   )).join('')
 );
 
+// const createDestinationalPhoto = (photos) => {
+//   console.log(photos);
+//   const {description, src} = photos;
+//   console.log(src);
+//   if (src !== 0) {
+//     return `<div class="event__photos-container">
+//     <div class="event__photos-tape">
+//       ${src.map(({el}) => `<img class="event__photo" src="${el}" alt="${description}">`).join('')}
+//     </div>
+//   </div>`;}
+// };
+//как достать src и мапиться по ним?
+
 const createDestinationalPhoto = (photos) => (
   `<div class="event__photos-container">
   <div class="event__photos-tape">
-    ${photos.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`)}
+    ${photos.map((el) => `<img class="event__photo" src="${el.src}" alt="${photos.description}">`)}
   </div>
 </div>`
 );
@@ -83,18 +85,17 @@ const getOfferByType = (offers, type) => {
   return offerByType;
 };
 
-
-const createFormEditTemplate = (data, availableOffersByType, isNewPoint) => {
+const createFormEditTemplate = (data, availableOffersByType ) => {
+  //вот большой вопрос - я прокинула сюда this.#destinations, в едит форм и сравниваю this._data с this.#destinations(что с модели тащу) в хендлере
+  //а нужны ли они в разметке? в getTemplate передавать? чтобы например сравнить по наличию в 102 строке?
   const {type, basePrice, startDate, finishDate, destination, offers, id} = data;
-  // const availableOffersByType = getOfferByType (thisOffers, type);
-  console.log(offers, availableOffersByType, 'offers, availableOffersByType');
   const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
-
 
   const cityList = createCityList();
   const typesList = createTypeList();
-  const eventRollupButton = createEventRollupButtonTemplate(isNewPoint);
-  const buttonText = createContentButton(isNewPoint);
+  // const test = Object.values(adresfoto);
+  // console.log(test, 'фоточки');
+  // вот тут посмотри, плиз, структуру самих пикчеров - я не правильно иттерируюсь по ним - и получаю толькуо 1 фотку из массива, см. стр. 52;
   const destinationPhotos = createDestinationalPhoto(destination.pictures);
   let showDestination = '';
 
@@ -142,8 +143,10 @@ const createFormEditTemplate = (data, availableOffersByType, isNewPoint) => {
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">${buttonText}</button>
-      ${eventRollupButton}
+      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
     </header>
     <section class="event__details">
     ${addOffersOption}
@@ -164,12 +167,13 @@ class FormEditView extends SmartView {
   #datepickerTo = null;
   #tripOffer = null;
   #offers = null;
+  #destinations = null;
 
-  constructor(point, offers) {
+  constructor(point, offers, destinations) {
     super();
-    console.log(point, offers);
     this._data = FormEditView.parsePointToData(point || BLANK_POINT);
     this.#offers = offers;
+    this.#destinations = destinations;
     this.#tripOffer = getOfferByType(this.#offers, this._data.type).offers;
     this.#setDatepicker();
     this.#setInnerHandlers();
@@ -283,43 +287,44 @@ class FormEditView extends SmartView {
 
   #typeChangeHandler = (evt) => {
     const isNodeInput = evt.target.tagName === 'INPUT';
-    console.log(evt.target, 'evt target в хендлере');
 
     if (!isNodeInput) {
       return;
     }
 
     const newType = evt.target.value;
+    const newOffers = getOfferByType(this.#offers, newType).offers;
+    // console.log(newOffers, 'новые офферы');
+    // вот тут странная история - если в апдейт для офферов передать newOffers, то офферы меняются в консоле, но не перерисовываются.
+
     this.updateData({
       type: newType,
-      offers: [],
+      offers: newOffers,
     });
-
-    this.#tripOffer = getOfferByType(this.#offers, newType).offers;
+    // console.log(this._data.offers, 'обновленная дата');
   }
 
   #cityChangeHandler = (evt) => {
-    const newCity = evt.target.value;
-    const isCityExist = CITY.includes(newCity);
     evt.preventDefault();
-    if (newCity.length <= 0 || !isCityExist) {
-      evt.target.setCustomValidity('please select a city from the list');
+
+    const getMatchedDestination = (inputValue, destinations) => {
+      const matchedDestination = destinations.find((el) => el.name === inputValue);
+      return matchedDestination;
+    };
+
+    const cityInput = evt.target;
+    const newCity = cityInput.value;
+    const newDestination = getMatchedDestination(newCity, this.#destinations);
+
+    if (!newDestination) {
+      cityInput.setCustomValidity('please select a city from the list');
     } else {
       evt.target.setCustomValidity('');
-      this.updateData(
-        //находить с фандом и сетить по текущему имени а не создавать новый
-        {
-          destination: {
-            description: generateDescription(DESCRIPTION_CITY),
-            name: newCity,
-            pictures: [{
-              src: getRandomPhotos(),
-              description: generatePicDescription(PICTURES_CITY),
-            }]
-          }
-        });
+      this.updateData({
+        destination: newDestination,
+      });
     }
-    evt.target.reportValidity();
+    cityInput.reportValidity();
   }
 
 
@@ -330,10 +335,8 @@ class FormEditView extends SmartView {
       return;
     }
 
-    console.log(evt.target.value, this.#tripOffer, this._data.offers, 'evt.target.value, this.#tripOffer, this._data.offers' );
     const hasSameOffer = this._data.offers.some((el) => el.id === Number(evt.target.value));
     const currentOffer = this.#tripOffer.find((el) => el.id === Number(evt.target.value));
-    console.log(currentOffer);
     const newPointOffers = hasSameOffer
       ? this._data.offers.filter((el) => el.id !== Number(evt.target.value))
       : [...this._data.offers, currentOffer];
@@ -341,40 +344,6 @@ class FormEditView extends SmartView {
     this.updateData({
       offers: newPointOffers,
     });
-
-
-    // const checkedCheckeboxes = evt.target.closest('input').querySelector('.event__offer-checkbox');
-    // console.log(checkedCheckeboxes, 'checkedCheckeboxes');
-    // const checkedValues = Array.from(checkedCheckeboxes).map((item) => item.value); // получаем id всех чекнутых чекбоксов
-    // console.log(checkedValues, 'checkValues');
-    // console.log(this.#tripOffer, 'что фильтруем');
-
-
-    // //посмотри в консольке, тут же структура другая, как оно отфильтруется?  по идеи у this.offers нужно сначала тип определить - но по какому объекту определять тип?
-    // //это должно быть что то типа availableOffersByType с 77 строки...я не понимаю((((
-    // const updatedOffers = this.#tripOffer.filter((item) => checkedValues.includes(item.title));
-    // console.log(updatedOffers, 'updatedOffers');
-    // this.updateData({
-    //   offers: updatedOffers,
-    // });
-
-    // console.log(this._data.offers, 'вид оферов');
-    // const checkedProposals = [];
-    // console.log(checkedProposals, 'массив чекнутых, офферы');
-    // evt.preventDefault();
-    // const clickedOffer = evt.target.closest('.event__offer-selector').querySelector('.event__offer-checkbox');
-    // console.log(checkedProposals);
-    // checkedPropsOffers.push({
-    //   title: clickedOffer.dataset.title,
-    //   id: clickedOffer.dataset.id,
-    //   price: Number(clickedOffer.dataset.price),
-    // });
-    // this.updateData({
-    //   offers: checkedProposals,
-    //   isOffers: checkedProposals.length !== 0,
-    //     // });
-    // const checkedCheckeboxes =evt.target.closest('.event__offer-selector').querySelectorAll('.event__offer-checkbox');
-
   }
 
 

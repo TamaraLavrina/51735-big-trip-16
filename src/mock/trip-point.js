@@ -9,11 +9,6 @@ const generateTypePoint = (type) => {
   return type[randomIndex];
 };
 
-// const generateDestination = (city) => {
-//   const randomIndex = getRandomInteger(0, city.length - 1);
-//   return city[randomIndex];
-// };
-
 const generateDescription = (descriptionCity) => {
   const randomIndex = getRandomInteger(0, descriptionCity.length - 1);
   return descriptionCity[randomIndex];
@@ -64,7 +59,6 @@ const destinations = CITY.map((el) => ({
 
 const generatePoint = () => {
   const type = generateTypePoint(OFFERS_TYPES);
-  // const destination = generateDestination(CITY);
   const date = generateDate();
   return {
     id: nanoid(),
