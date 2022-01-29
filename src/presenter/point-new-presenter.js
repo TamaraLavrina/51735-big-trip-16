@@ -10,22 +10,23 @@ class PointNewPresenter {
 
   #pointEditComponent = null;
   #destroyCallback = null;
+  #offers = null;
 
-  constructor(pointListContainer, changeData) {
+  constructor(pointListContainer, offers, changeData) {
     this.#pointListContainer = pointListContainer;
+    this.#offers = offers;
     this.#changeData = changeData;
+
   }
 
-  init = ( callback) => {
-    //сюда кмк должны приходить офферы, и в формедитвью передаваться, но так не работает((
-    // init = (offers, callback) => {
+  init = (callback) => {
     if (this.#pointEditComponent !== null) {
       return;
     }
     this.#destroyCallback = callback;
 
-    this.#pointEditComponent = new FormEditView({});
-    // this.#pointEditComponent = new FormEditView({offers});
+    this.#pointEditComponent = new FormEditView(null, this.#offers);
+    //вот сюда тоже прокинуть
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 

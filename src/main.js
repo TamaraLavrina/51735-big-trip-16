@@ -1,5 +1,5 @@
 import { render, RenderPosition, remove } from './utils/render.js';
-import { EVENT_POINT_COUNT, MenuItem, additionalOffers } from './constants.js';
+import { EVENT_POINT_COUNT, MenuItem, additionalOffers} from './constants.js';
 import MainTripView from './view/main-trip-view.js';
 import { generatePoint } from './mock/trip-point.js';
 import SiteMenuView from './view/site-menu-view.js';
@@ -9,18 +9,23 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
 import OffersModel from './model/offers-model.js';
 import StatisticsView from './view/statistics-view.js';
+import DestinationModel from './model/destinations-model.js';
+import { destinations} from './mock/trip-point.js';
 
 const points = Array.from({length: EVENT_POINT_COUNT}, generatePoint);
 const pointsModel = new PointsModel();
 pointsModel.points = points;
 const filterModel = new FilterModel();
-const offersModel = new OffersModel(additionalOffers);
-
+const offersModel = new OffersModel();
+offersModel.offers = additionalOffers;
+const destinationsModel = new DestinationModel();
+destinationsModel.destinations = destinations;
+// console.log(destinationsModel.destinations);
 
 const header = document.querySelector('.page-header__container');
 const pageBody = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
 const mainTripComponent = new MainTripView();
-const tripListPresenter = new TripListPresenter(pageBody, mainTripComponent, pointsModel, filterModel, offersModel);
+const tripListPresenter = new TripListPresenter(pageBody, mainTripComponent, pointsModel, filterModel, offersModel, destinationsModel);
 const controls = mainTripComponent.element.querySelector('.trip-main__trip-controls');
 const siteMenuComponent = new SiteMenuView();
 
@@ -57,7 +62,7 @@ const handleSiteMenuClick = (menuItem) => {
       filterPresenter.destroy();
       tripListPresenter.destroy();
       // tripListPresenter.renderMainTripInfo();
-      //вот тут, мне нужно отобразить только часть презентера - что показывает маршрут, и не получается ее вызвать
+      // вот тут, мне нужно отобразить только часть презентера - что показывает маршрут, и не получается ее вызвать
       statisticsComponent = new StatisticsView(pointsModel.points);
       render(pageBody, statisticsComponent, RenderPosition.BEFOREEND);
       siteMenuComponent.setMenuItem(MenuItem.STATS);

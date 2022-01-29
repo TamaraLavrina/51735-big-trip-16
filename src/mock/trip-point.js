@@ -9,10 +9,10 @@ const generateTypePoint = (type) => {
   return type[randomIndex];
 };
 
-const generateDestination = (city) => {
-  const randomIndex = getRandomInteger(0, city.length - 1);
-  return city[randomIndex];
-};
+// const generateDestination = (city) => {
+//   const randomIndex = getRandomInteger(0, city.length - 1);
+//   return city[randomIndex];
+// };
 
 const generateDescription = (descriptionCity) => {
   const randomIndex = getRandomInteger(0, descriptionCity.length - 1);
@@ -45,27 +45,35 @@ const generateDate = () => {
   };
 };
 
+const generateOffers = (type, proposals) => {
+  const offersByType = proposals.find((proposal) => proposal.type === type);
+  return offersByType.offers.slice(0, getRandomInteger(0, proposals.length - 1));
+};
+
+const destinations = CITY.map((el) => ({
+  description: generateDescription(DESCRIPTION_CITY),
+  name: el,
+  pictures: [
+    {
+      src: getRandomPhotos(),
+      description: generatePicDescription(PICTURES_CITY),
+    },
+  ],
+}));
+
+
 const generatePoint = () => {
   const type = generateTypePoint(OFFERS_TYPES);
-  const destination = generateDestination(CITY);
+  // const destination = generateDestination(CITY);
   const date = generateDate();
   return {
     id: nanoid(),
     type: type,
-    destination: {
-      description: generateDescription(DESCRIPTION_CITY),
-      name: destination,
-      pictures: [
-        {
-          src: getRandomPhotos(),
-          description: generatePicDescription(PICTURES_CITY),
-        },
-      ],
-    },
+    destination: destinations[0, getRandomInteger(0, destinations.length -1)],
     basePrice: generateRandomPrice(type),
     startDate: date.startDate,
     finishDate: date.endDate,
-    offers: (additionalOffers.find((el) => el.type === type)).offers,
+    offers: generateOffers(type, additionalOffers),
     isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };
@@ -109,10 +117,9 @@ const BLANK_POINT = {
     name: '',
     pictures: [],
   },
-  id: 80,
   isFavorite: true,
   type: 'flight',
-  offers: (additionalOffers.find((el) => el.type === 'flight')).offers,
+  offers: [],
 };
 
 export {
@@ -123,6 +130,7 @@ export {
   generatePicDescription,
   generateTypePoint,
   PICTURES_CITY,
+  destinations,
 };
 
 

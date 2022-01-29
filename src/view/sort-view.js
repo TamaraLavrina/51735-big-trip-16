@@ -5,7 +5,14 @@ const createMainSortTemplate = (currentSortType) => {
   const sortDirections = Object.values(SortType);
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     ${sortDirections.map((obj) => `<div class="trip-sort__item  trip-sort__item--${obj}">
-    <input id="sort-${obj}" class="trip-sort__input  visually-hidden" data-sort-type="${obj}" type="radio" name="trip-sort" ${currentSortType === sortDirections ? 'checked' : ''}" >
+    <input
+    id="sort-${obj}"
+    class="trip-sort__input  visually-hidden"
+    data-sort-type="${obj}"
+    type="radio"
+    ${obj  === currentSortType ? 'checked' : ''}
+    name="trip-sort"
+    />
     <label class="trip-sort__btn" for="sort-${obj}">${obj}</label>
   </div>`).join('')}
   </form>`;};

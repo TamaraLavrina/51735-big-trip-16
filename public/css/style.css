@@ -914,6 +914,7 @@ main {
   text-transform: capitalize; }
 
 .event__offer-selector {
+  position: relative;
   margin-bottom: 6px; }
   .event__offer-selector:not(:last-of-type) {
     margin-right: 6px; }
@@ -936,6 +937,21 @@ main {
     background-color: rgba(13, 138, 228, 0.6); }
   .event__offer-label::first-letter {
     text-transform: capitalize; }
+
+.event__offer-checkbox::before {
+  position: absolute;
+  top:0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  content: '';
+}
+
+.event__offer-checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 
 .event__offer-checkbox:checked + .event__offer-label {
   background-color: #0d8ae4; }

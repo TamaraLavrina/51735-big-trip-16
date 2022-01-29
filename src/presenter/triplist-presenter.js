@@ -39,7 +39,9 @@ class TripListPresenter {
     this.#filterModel = filterModel;
     this.#offersModel = offersModel;
 
-    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.#handleViewAction);
+
+    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.offers,  this.#handleViewAction);
+    // вот смюда придут
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -64,8 +66,7 @@ class TripListPresenter {
   }
 
   get offers() {
-    this.#offers = this.#offersModel.offers;
-    return this.#offers;
+    return this.#offersModel.offers;
   }
 
   init = () => {
@@ -73,6 +74,7 @@ class TripListPresenter {
     this.#renderBoard();
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#offersModel.addObserver(this.#handleModelEvent);
   }
 
   destroy = () => {
@@ -92,7 +94,7 @@ class TripListPresenter {
     if (!this.#tripListContainer.contains(this.#tripListComponent.element)) {
       this.#renderList();
     }
-    this.#pointNewPresenter.init(this.#offers, callback);
+    this.#pointNewPresenter.init(callback);
 
     remove(this.#noPointsComponent);
   }
@@ -169,8 +171,15 @@ class TripListPresenter {
 
   #renderPoint = (point) => {
     this.#offers = this.#offersModel.offers;
+    // console.log('рендер точки в триплисте - презентере');
+    // console.log(this.#offers);
+
+
     const pointPresenter = new PointPresenter(this.#tripListComponent, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point, this.#offers);
+    // console.log('смотрим что пойнт презентер.инит передаем');
+    // console.log(this.#offers);
+    pointPresenter.init(point, this.#offers); //смотрим что пойнт презентере
+
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 

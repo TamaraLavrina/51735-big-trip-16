@@ -6,7 +6,6 @@ import { countDuration } from '../utils/utils.js';
 
 const createPointTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, offers, isFavorite} = point;
-
   const dateFinishHours = dayjs(finishDate).format('HH:mm');
   const dateStartHours = dayjs(startDate).format('HH:mm');
   const startDateMonthAndDay = dayjs(startDate).format('MMM D');

@@ -1,4 +1,4 @@
-import { CITY, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY, additionalOffers } from '../constants.js';
+import { CITY, OFFERS_TYPES, DESCRIPTION_CITY, PICTURES_CITY} from '../constants.js';
 import {generateDescription, generatePicDescription, getRandomPhotos } from '../mock/trip-point.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
@@ -19,21 +19,40 @@ const createContentButton = (isNewEvent) => (
   `${isNewEvent ? 'Cancel' : 'Delete'}`
 );
 
-const createAdditionalOffer = (offers) => {
-  if (offers.length) {
-    return `<div class="event__available-offers">
-    ${offers.map(({title, id, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" data-title="${title.toLowerCase()}" data-price="${price}" >
-    <label class="event__offer-label" for="event-offer-${id}">
-      <span class="event__offer-title">${title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${price}</span>
-    </label>
-  </div>`).join('')}
-    </div>`;
-  }
-  return '';
+const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
+  const isSelected = currentPointOffers.some((offer) => offer.id === possibleProposal.id);
+
+  return isSelected;
 };
+
+const createAdditionalOffer = (currentPointOffers, possibleProposals ) => {
+  console.log(currentPointOffers, possibleProposals);
+
+  if (!possibleProposals.length) {
+    return '';
+  }
+  return `<section class="event__section  event__section--offers">
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  <div class="event__available-offers">
+  ${possibleProposals.map((possibleProposal) => `<div class="event__offer-selector">
+  <input
+    class="event__offer-checkbox"
+    id="event-offer-${possibleProposal.id}"
+    type="checkbox"
+    name="event-offer-${possibleProposal.id}"
+    value="${possibleProposal.id}"
+    ${checkIsOfferSelected(currentPointOffers, possibleProposal) ? 'checked' : ''}
+    >
+  <label class="event__offer-label" for="event-offer-${possibleProposal.id}">
+    <span class="event__offer-title">${possibleProposal.title}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${possibleProposal.price}</span>
+  </label>
+</div>`).join('')}
+  </div>
+</section>`;
+};
+//      // >
 
 const createCityList = () => (
   CITY.map((city) => (
@@ -52,15 +71,26 @@ const createDestinationalPhoto = (photos) => (
 const createTypeList = () => (
   OFFERS_TYPES.map((type) => (
     `<div class="event__type-item">
-      <input id="event-type-${type.toLowerCase()}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}">${type}</label>
+      <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}">${type}</label>
     </div>`
   )).join('')
 );
 
-const createFormEditTemplate = (data,  isNewPoint) => {
+const getOfferByType = (offers, type) => {
+  const offerByType = offers.find((offer) => offer.type === type);
+
+  return offerByType;
+};
+
+
+const createFormEditTemplate = (data, availableOffersByType, isNewPoint) => {
   const {type, basePrice, startDate, finishDate, destination, offers, id} = data;
-  const offersTemplate = createAdditionalOffer(offers);
+  // const availableOffersByType = getOfferByType (thisOffers, type);
+  console.log(offers, availableOffersByType, 'offers, availableOffersByType');
+  const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
+
+
   const cityList = createCityList();
   const typesList = createTypeList();
   const eventRollupButton = createEventRollupButtonTemplate(isNewPoint);
@@ -76,11 +106,11 @@ const createFormEditTemplate = (data,  isNewPoint) => {
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
-        <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
+        <label class="event__type  event__type-btn" for="event-type-toggle">
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
         </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
@@ -116,9 +146,8 @@ const createFormEditTemplate = (data,  isNewPoint) => {
       ${eventRollupButton}
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">${offersTemplate}</div></section>
+    ${addOffersOption}
+    </section>
         <section class="event__section  event__section--destination ${showDestination}">
           <h3 class="event__section-title  event__section-title--destination">${destination.name}</h3>
           <p class="event__destination-description">${destination.description}</p>
@@ -133,26 +162,21 @@ const createFormEditTemplate = (data,  isNewPoint) => {
 class FormEditView extends SmartView {
   #datepickerFrom = null;
   #datepickerTo = null;
-
+  #tripOffer = null;
   #offers = null;
-  #newPoint = null;
 
-  constructor(data) {
+  constructor(point, offers) {
     super();
-    const {point = BLANK_POINT, offers} = data;
-    //вот если в консруктор передаю дату то в списке при открытие не текущие точки,
-    // а бланк пойнт как и следовало ожидать и отредактировать их невозможно, ну и сохранение не работает?
-    //как починить открытие формы редактивание для уже существующих точек
-    this._data = FormEditView.parsePointToData(point);
-    this.#newPoint = !point;
-    this.#setInnerHandlers();
-    this.#setDatepicker();
+    console.log(point, offers);
+    this._data = FormEditView.parsePointToData(point || BLANK_POINT);
     this.#offers = offers;
+    this.#tripOffer = getOfferByType(this.#offers, this._data.type).offers;
+    this.#setDatepicker();
+    this.#setInnerHandlers();
   }
 
   get template() {
-    const isNewPoint = (this._newPoint);
-    return createFormEditTemplate(this._data, this.#offers, isNewPoint);
+    return createFormEditTemplate(this._data, this.#tripOffer);
   }
 
   removeElement = () => {
@@ -251,20 +275,27 @@ class FormEditView extends SmartView {
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#cityChangeHandler);
     this.element.querySelector('.event__available-offers')
-      .addEventListener('change', this.#offerChangeHandler);
+      .addEventListener('click', this.#offerChangeHandler);
     this.element.querySelector('.event__input--price').
       addEventListener('input', this.#priceChangeHandler);
 
   }
 
   #typeChangeHandler = (evt) => {
-    if (evt.target.tagName === 'INPUT') {
-      const newType = evt.target.value;
-      this.updateData({
-        type: newType,
-        offers: (additionalOffers.find((el) => el.type === newType)).offers,
-      });
+    const isNodeInput = evt.target.tagName === 'INPUT';
+    console.log(evt.target, 'evt target в хендлере');
+
+    if (!isNodeInput) {
+      return;
     }
+
+    const newType = evt.target.value;
+    this.updateData({
+      type: newType,
+      offers: [],
+    });
+
+    this.#tripOffer = getOfferByType(this.#offers, newType).offers;
   }
 
   #cityChangeHandler = (evt) => {
@@ -276,6 +307,7 @@ class FormEditView extends SmartView {
     } else {
       evt.target.setCustomValidity('');
       this.updateData(
+        //находить с фандом и сетить по текущему имени а не создавать новый
         {
           destination: {
             description: generateDescription(DESCRIPTION_CITY),
@@ -290,45 +322,61 @@ class FormEditView extends SmartView {
     evt.target.reportValidity();
   }
 
+
   #offerChangeHandler = (evt) => {
-    evt.preventDefault();
+    const isNodeInput = evt.target.tagName === 'INPUT';
 
-    /*
-    вот тут не понимаю как правильно написать фильтр, что-то туплю....
-    console.log(this._data.offers);
-    console.log('дата');
-    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-    console.log(checkedOffers);
-    const offerIds = checkedOffers.map((element) => element.dataset.id);
-    console.log(offerIds);
-    console.log('чекнутые айди');
-    const updatedOffers = this._data.offers.filter((item) => item.id === offerIds);
-    console.log(updatedOffers);
-    console.log('фильтрованные офферы');
-    еще непонятно что произошло с состоянием checked - задавать заново?
-    const newOffers = evt.target;
-    newOffers.setAttribute('checked' , '');
-    */
+    if (!isNodeInput) {
+      return;
+    }
 
-    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox'));
-    const currentOffers = [];
-    checkedOffers.forEach((offer) => {
-      if(offer.checked) {
-        currentOffers.push({
-          id: offer.dataset.id,
-          title: offer.dataset.title,
-          price: Number(offer.dataset.price),
-        });
-      }});
+    console.log(evt.target.value, this.#tripOffer, this._data.offers, 'evt.target.value, this.#tripOffer, this._data.offers' );
+    const hasSameOffer = this._data.offers.some((el) => el.id === Number(evt.target.value));
+    const currentOffer = this.#tripOffer.find((el) => el.id === Number(evt.target.value));
+    console.log(currentOffer);
+    const newPointOffers = hasSameOffer
+      ? this._data.offers.filter((el) => el.id !== Number(evt.target.value))
+      : [...this._data.offers, currentOffer];
 
     this.updateData({
-      offers: currentOffers,
-      isOffers: currentOffers.length !== 0,
-      //была мысль сохранять в дате и передавать потом в разметку,
-      // в класс секции офферов - нет оферов, то и не рисовать секцию - visually-hidden
-      // однако если ставить сразу, то вообще перестает отображать
+      offers: newPointOffers,
     });
+
+
+    // const checkedCheckeboxes = evt.target.closest('input').querySelector('.event__offer-checkbox');
+    // console.log(checkedCheckeboxes, 'checkedCheckeboxes');
+    // const checkedValues = Array.from(checkedCheckeboxes).map((item) => item.value); // получаем id всех чекнутых чекбоксов
+    // console.log(checkedValues, 'checkValues');
+    // console.log(this.#tripOffer, 'что фильтруем');
+
+
+    // //посмотри в консольке, тут же структура другая, как оно отфильтруется?  по идеи у this.offers нужно сначала тип определить - но по какому объекту определять тип?
+    // //это должно быть что то типа availableOffersByType с 77 строки...я не понимаю((((
+    // const updatedOffers = this.#tripOffer.filter((item) => checkedValues.includes(item.title));
+    // console.log(updatedOffers, 'updatedOffers');
+    // this.updateData({
+    //   offers: updatedOffers,
+    // });
+
+    // console.log(this._data.offers, 'вид оферов');
+    // const checkedProposals = [];
+    // console.log(checkedProposals, 'массив чекнутых, офферы');
+    // evt.preventDefault();
+    // const clickedOffer = evt.target.closest('.event__offer-selector').querySelector('.event__offer-checkbox');
+    // console.log(checkedProposals);
+    // checkedPropsOffers.push({
+    //   title: clickedOffer.dataset.title,
+    //   id: clickedOffer.dataset.id,
+    //   price: Number(clickedOffer.dataset.price),
+    // });
+    // this.updateData({
+    //   offers: checkedProposals,
+    //   isOffers: checkedProposals.length !== 0,
+    //     // });
+    // const checkedCheckeboxes =evt.target.closest('.event__offer-selector').querySelectorAll('.event__offer-checkbox');
+
   }
+
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();

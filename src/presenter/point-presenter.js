@@ -16,6 +16,7 @@ class PointPresenter {
   #pointComponent = null;
   #pointEditComponent = null;
   #point = null;
+  #offers = null;
   #mode = Mode.DEFAULT
 
   constructor(pointListContainer, changeData, changeMode) {
@@ -26,12 +27,16 @@ class PointPresenter {
 
   init = (point, offers) => {
     this.#point = point;
+    this.#offers = offers;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new PointView(point);
-    this.#pointEditComponent = new FormEditView(point, offers);
+    // console.log('офферы, которые передали в пойнт презентере.инит');
+    // console.log(this.#offers);
+    this.#pointEditComponent = new FormEditView(point, this.#offers);
+
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);

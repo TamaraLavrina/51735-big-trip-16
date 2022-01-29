@@ -23,148 +23,22 @@ const CITY = [
   'Berlin',
 ];
 
-const additionalOffers = [
-  {
-    'type':  OfferType.TAXI,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Upgrade to a business class',
-        'price': 120
-      },
-      {
-        'id': 2,
-        'title': 'Choose the radio station',
-        'price': 60
-      },
-      {
-        'id': 3,
-        'title': 'Order Uber',
-        'price': 20
-      },
-    ]
-  },
-  {
-    'type':  OfferType.BUS,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Upgrade to a business class',
-        'price': 120
-      },
-      {
-        'id': 2,
-        'title': 'Rent mini-bus',
-        'price': 500
-      }
-    ]
-  },
-  {
-    'type': OfferType.TRAIN,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Upgrade to a business class',
-        'price': 120
-      },
-      {
-        'id': 2,
-        'title': 'Order breakfast',
-        'price': 60
-      }
-    ]
-  },
-  {
-    'type': OfferType.SHIP,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Upgrade to a business class',
-        'price': 120
-      },
-      {
-        'id': 2,
-        'title': 'Order breakfast',
-        'price': 60
-      }
-    ]
-  },
-  {
-    'type': OfferType.DRIVE,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Детское кресло',
-        'price': 200
-      },
-      {
-        'id': 2,
-        'title': 'Курить в салоне',
-        'price': 500
-      }
-    ]
-  },
-  {
-    'type': OfferType.FLIGHT,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Негабаритный багаж',
-        'price': 60
-      },
-      {
-        'id': 2,
-        'title': 'Ранее бронирование',
-        'price': 60
-      }
-    ]
-  },
-  {
-    'type': OfferType.CHECKIN,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Check-in online',
-        'price': 20
-      },
-      {
-        'id': 2,
-        'title': 'Поздний выезд',
-        'price': 50
-      },
-    ]
-  },
-  {
-    'type': OfferType.SIGHTSEENING,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Аудио гид',
-        'price': 50
-      },
-      {
-        'id': 2,
-        'title': 'Персональный гид',
-        'price': 200
-      }
-    ]
-  },
-  {
-    'type': OfferType.RESTARAUNT,
-    'offers': [
-      {
-        'id': 1,
-        'title': 'Забронировать столик',
-        'price': 5
-      },
-      {
-        'id': 2,
-        'title': 'Специальное меню',
-        'price': 10
-      }
-    ]
-  },
-];
+const additionalOffers = OFFERS_TYPES.map((el) => ({
+  'type': el,
+  'offers': [
+    {
+      'id': 1,
+      'title': 'Забронировать столик',
+      'price': 5
+    },
+    {
+      'id': 2,
+      'title': 'Специальное меню',
+      'price': 10
+    }
+  ]
+}));
+
 
 const POINT_PRICE = {
   [OfferType.TAXI]: {
