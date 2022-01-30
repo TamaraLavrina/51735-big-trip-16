@@ -1,4 +1,4 @@
-import { CITY, OFFERS_TYPES} from '../constants.js';
+import { OFFERS_TYPES } from '../constants.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
 import he from 'he';
@@ -7,10 +7,8 @@ import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
-
 const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
   const isSelected = currentPointOffers.some((offer) => offer.id === possibleProposal.id);
-
   return isSelected;
 };
 
@@ -18,56 +16,39 @@ const createAdditionalOffer = (currentPointOffers, possibleProposals ) => {
   if (!possibleProposals.length) {
     return '';
   }
-
   return `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
   ${possibleProposals.map((possibleProposal) => `<div class="event__offer-selector">
-  <input
-    class="event__offer-checkbox"
-    id="event-offer-${possibleProposal.id}"
-    type="checkbox"
-    name="event-offer-${possibleProposal.id}"
-    value="${possibleProposal.id}"
-    ${checkIsOfferSelected(currentPointOffers, possibleProposal) ? 'checked' : ''}
-    >
-  <label class="event__offer-label" for="event-offer-${possibleProposal.id}">
-    <span class="event__offer-title">${possibleProposal.title}</span>
-    &plus;&euro;&nbsp;
-    <span class="event__offer-price">${possibleProposal.price}</span>
-  </label>
-</div>`).join('')}
-  </div>
-</section>`;
+    <input
+      class="event__offer-checkbox"
+      id="event-offer-${possibleProposal.id}"
+      type="checkbox"
+      name="event-offer-${possibleProposal.id}"
+      value="${possibleProposal.id}"
+      ${checkIsOfferSelected(currentPointOffers, possibleProposal) ? 'checked' : ''}
+      >
+    <label class="event__offer-label" for="event-offer-${possibleProposal.id}">
+      <span class="event__offer-title">${possibleProposal.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${possibleProposal.price}</span>
+    </label>
+  </div>`).join('')}
+    </div>
+  </section>`;
 };
-//      // >
 
-const createCityList = () => (
-  CITY.map((city) => (
-    `<option value="${he.encode(city)}"></option>`
+const createCityList = (destinationsFromModel) => (
+  destinationsFromModel.map((obj) => (
+    `<option value="${he.encode(obj.name)}"></option>`
   )).join('')
 );
 
-// const createDestinationalPhoto = (photos) => {
-//   console.log(photos);
-//   const {description, src} = photos;
-//   console.log(src);
-//   if (src !== 0) {
-//     return `<div class="event__photos-container">
-//     <div class="event__photos-tape">
-//       ${src.map(({el}) => `<img class="event__photo" src="${el}" alt="${description}">`).join('')}
-//     </div>
-//   </div>`;}
-// };
-//как достать src и мапиться по ним?
-
-const createDestinationalPhoto = (photos) => (
-  `<div class="event__photos-container">
+const createDestinationalPhoto = (photos) => `<div class="event__photos-container">
   <div class="event__photos-tape">
     ${photos.map((el) => `<img class="event__photo" src="${el.src}" alt="${photos.description}">`)}
   </div>
-</div>`
-);
+</div>`;
 
 const createTypeList = () => (
   OFFERS_TYPES.map((type) => (
@@ -77,31 +58,23 @@ const createTypeList = () => (
     </div>`
   )).join('')
 );
-
 const getOfferByType = (offers, type) => {
   const offerByType = offers.find((offer) => offer.type === type);
-
   return offerByType;
 };
-
-const createFormEditTemplate = (data, availableOffersByType ) => {
-  //вот большой вопрос - я прокинула сюда this.#destinations, в едит форм и сравниваю this._data с this.#destinations(что с модели тащу) в хендлере
-  //а нужны ли они в разметке? в getTemplate передавать? чтобы например сравнить по наличию в 102 строке?
+const createFormEditTemplate = (data, availableOffersByType, destinationsFromModel ) => {
   const {type, basePrice, startDate, finishDate, destination, offers, id} = data;
   const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
-
-  const cityList = createCityList();
+  const cityList = createCityList(destinationsFromModel);
   const typesList = createTypeList();
   // const test = Object.values(adresfoto);
   // console.log(test, 'фоточки');
   // вот тут посмотри, плиз, структуру самих пикчеров - я не правильно иттерируюсь по ним - и получаю толькуо 1 фотку из массива, см. стр. 52;
   const destinationPhotos = createDestinationalPhoto(destination.pictures);
   let showDestination = '';
-
   if (destination.name.length === 0) {
     showDestination = 'visually-hidden';
   }
-
   return  `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -179,7 +152,7 @@ class FormEditView extends SmartView {
   }
 
   get template() {
-    return createFormEditTemplate(this._data, this.#tripOffer);
+    return createFormEditTemplate(this._data, this.#tripOffer, this.#destinations);
   }
 
   removeElement = () => {

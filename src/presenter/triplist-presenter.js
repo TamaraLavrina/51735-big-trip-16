@@ -5,7 +5,6 @@ import EmptyList from '../view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
-import MainTripInfoView from '../view/main-trip-info.js';
 import { SortType, UpdateType, UserAction, EVENT_POINT_COUNT, FilterType } from '../constants.js';
 import { sortPointPrice, sortPointDay, sortPointTime } from '../utils/utils.js';
 import {filter} from '../utils/filter.js';
@@ -173,16 +172,11 @@ class TripListPresenter {
     if(this.#tripInfoComponent !== null) {
       this.#tripInfoComponent = null;
     }
-    const sortedPoints = this.#pointsModel.points.sort(sortPointDay);
-
-    this.#tripInfoComponent = new MainTripInfoView(sortedPoints);
-    render(this.#routContainer, this.#tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
 
   #renderPoint = (point) => {
     this.#offers = this.#offersModel.offers;
     this.#destinations = this.#destinationsModel.destinations;
-
 
     const pointPresenter = new PointPresenter(this.#tripListComponent, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point, this.#offers, this.#destinations);
