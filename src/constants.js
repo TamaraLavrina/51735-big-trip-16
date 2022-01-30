@@ -23,7 +23,6 @@ const CITY = [
   'Berlin',
 ];
 
-
 const additionalOffers = [
   {
     'type':  OfferType.TAXI,
@@ -167,7 +166,6 @@ const additionalOffers = [
   },
 ];
 
-
 const POINT_PRICE = {
   [OfferType.TAXI]: {
     min: 50,
@@ -255,7 +253,6 @@ const FilterType = {
 };
 
 const MenuItem = {
-  // ADD_NEW_EVENT: 'add-new-point',
   TABLE: 'Table',
   STATS: 'Stats',
 };

@@ -2,7 +2,6 @@ import PointView from '../view/point-view.js';
 import FormEditView from '../view/form-edit-view.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import {UserAction, UpdateType} from '../constants.js';
-// import { destinations } from '../mock/trip-point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -36,8 +35,6 @@ class PointPresenter {
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new PointView(point);
-    // console.log('офферы, которые передали в пойнт презентере.инит');
-    // console.log(this.#offers);
     this.#pointEditComponent = new FormEditView(point, this.#offers, this.#destinations);
 
 

@@ -11,8 +11,7 @@ const createMainSortTemplate = (currentSortType) => {
     data-sort-type="${obj}"
     type="radio"
     ${obj  === currentSortType ? 'checked' : ''}
-    name="trip-sort"
-    />
+    name="trip-sort"/>
     <label class="trip-sort__btn" for="sort-${obj}">${obj}</label>
   </div>`).join('')}
   </form>`;};

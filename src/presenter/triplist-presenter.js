@@ -43,8 +43,6 @@ class TripListPresenter {
 
     this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.offers, this.destinations, this.#handleViewAction);
 
-    // вот смюда придут
-
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#offersModel.addObserver(this.#handleModelEvent);

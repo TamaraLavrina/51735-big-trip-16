@@ -18,7 +18,6 @@ class PointNewPresenter {
     this.#offers = offers;
     this.#destinations = destinations;
     this.#changeData = changeData;
-
   }
 
   init = (callback) => {
@@ -60,7 +59,6 @@ class PointNewPresenter {
     );
     this.destroy();
   }
-
 
   #handleDeleteClick = () => {
     this.destroy();

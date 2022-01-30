@@ -1,5 +1,4 @@
 import { CITY, OFFERS_TYPES} from '../constants.js';
-// import {generateDescription, generatePicDescription, getRandomPhotos } from '../mock/trip-point.js';
 import { BLANK_POINT } from '../mock/trip-point.js';
 import SmartView from './smart-view.js';
 import he from 'he';
@@ -242,8 +241,8 @@ class FormEditView extends SmartView {
           ['time_24hr']: true,
           defaultDate: this._data.startDate,
           onChange: this.#dateFromChangeHandler,
-        },
-      );}
+        });
+    }
   }
 
   #setDatepickerTo = () => {
@@ -282,7 +281,6 @@ class FormEditView extends SmartView {
       .addEventListener('click', this.#offerChangeHandler);
     this.element.querySelector('.event__input--price').
       addEventListener('input', this.#priceChangeHandler);
-
   }
 
   #typeChangeHandler = (evt) => {
@@ -382,5 +380,3 @@ class FormEditView extends SmartView {
 }
 
 export default FormEditView;
-
-

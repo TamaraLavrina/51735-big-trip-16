@@ -61,8 +61,6 @@ const handleSiteMenuClick = (menuItem) => {
     case MenuItem.STATS: {
       filterPresenter.destroy();
       tripListPresenter.destroy();
-      // tripListPresenter.renderMainTripInfo();
-      // вот тут, мне нужно отобразить только часть презентера - что показывает маршрут, и не получается ее вызвать
       statisticsComponent = new StatisticsView(pointsModel.points);
       render(pageBody, statisticsComponent, RenderPosition.BEFOREEND);
       siteMenuComponent.setMenuItem(MenuItem.STATS);
@@ -74,8 +72,6 @@ const handleSiteMenuClick = (menuItem) => {
 newPointButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   newPointButton.disabled = true;
-  // tripListPresenter.destroy();
-  // tripListPresenter.init();
   tripListPresenter.createPoint(handlePointNewFormClose);
   siteMenuComponent.element.querySelector(`[value=${MenuItem.TABLE}]`).disabled = true;
   siteMenuComponent.element.querySelector(`[value=${MenuItem.STATS}]`).disabled = true;
