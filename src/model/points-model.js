@@ -9,7 +9,7 @@ class PointsModel extends AbstractObservable {
     this.#apiService = apiService;
 
     this.#apiService.points.then((points) => {
-      console.log(points);
+      console.log(points.map(this.#adaptToClient));
       // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
       // а ещё на сервере используется snake_case, а у нас camelCase.
       // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
@@ -64,6 +64,22 @@ class PointsModel extends AbstractObservable {
 
     this._notify(updateType);
   }
+
+  #adaptToClient = (point) => {
+    const adaptedPoint = {...point,
+      dateFrom: new Date(point['startDate']),
+      dateTo: new Date(point['finishDate']),
+      isFavorite: point['is_favorite'],
+    };
+
+    // Ненужные ключи мы удаляем
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
+  }
+
 }
 
 export default PointsModel;
