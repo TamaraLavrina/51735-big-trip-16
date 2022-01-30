@@ -11,16 +11,20 @@ import OffersModel from './model/offers-model.js';
 import StatisticsView from './view/statistics-view.js';
 import DestinationModel from './model/destinations-model.js';
 import { destinations} from './mock/trip-point.js';
+import ApiService from './api-service.js';
+
+const AUTHORIZATION = 'Basic hzxcvzxcvzdgfmna2555j';
+const END_POINT = 'https://16.ecmascript.pages.academy/big-trip/';
 
 const points = Array.from({length: EVENT_POINT_COUNT}, generatePoint);
-const pointsModel = new PointsModel();
+const pointsModel = new PointsModel(new ApiService(END_POINT, AUTHORIZATION));
 pointsModel.points = points;
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
 offersModel.offers = additionalOffers;
 const destinationsModel = new DestinationModel();
 destinationsModel.destinations = destinations;
-// console.log(destinationsModel.destinations);
+
 
 const header = document.querySelector('.page-header__container');
 const pageBody = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
