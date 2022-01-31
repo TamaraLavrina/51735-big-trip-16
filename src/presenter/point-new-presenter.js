@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import FormEditView from '../view/form-edit-view.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {UserAction, UpdateType} from '../constants.js';
@@ -55,7 +54,7 @@ class PointNewPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      Object.assign({id: nanoid()}, point),
+      point,
     );
     this.destroy();
   }

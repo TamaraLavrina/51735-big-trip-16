@@ -272,6 +272,6 @@ export {
   UserAction,
   UpdateType,
   FilterType,
-  MenuItem
+  MenuItem,
 };
 

@@ -1,12 +1,12 @@
-import { OFFERS_TYPES } from '../constants.js';
-import { BLANK_POINT } from '../mock/trip-point.js';
+import { OFFERS_TYPES} from '../constants.js';
+import {   BLANK_POINT } from '../utils/utils.js';
 import SmartView from './smart-view.js';
 import he from 'he';
 
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
+// const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
   const isSelected = currentPointOffers.some((offer) => offer.id === possibleProposal.id);
   return isSelected;
@@ -67,14 +67,12 @@ const createFormEditTemplate = (data, availableOffersByType, destinationsFromMod
   const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
   const cityList = createCityList(destinationsFromModel);
   const typesList = createTypeList();
-  // const test = Object.values(adresfoto);
-  // console.log(test, 'фоточки');
-  // вот тут посмотри, плиз, структуру самих пикчеров - я не правильно иттерируюсь по ним - и получаю толькуо 1 фотку из массива, см. стр. 52;
   const destinationPhotos = createDestinationalPhoto(destination.pictures);
   let showDestination = '';
   if (destination.name.length === 0) {
     showDestination = 'visually-hidden';
   }
+
   return  `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -264,15 +262,12 @@ class FormEditView extends SmartView {
     }
 
     const newType = evt.target.value;
+    this.#tripOffer = getOfferByType(this.#offers, newType).offers;
     const newOffers = getOfferByType(this.#offers, newType).offers;
-    // console.log(newOffers, 'новые офферы');
-    // вот тут странная история - если в апдейт для офферов передать newOffers, то офферы меняются в консоле, но не перерисовываются.
-
     this.updateData({
       type: newType,
       offers: newOffers,
     });
-    // console.log(this._data.offers, 'обновленная дата');
   }
 
   #cityChangeHandler = (evt) => {
@@ -290,7 +285,7 @@ class FormEditView extends SmartView {
     if (!newDestination) {
       cityInput.setCustomValidity('please select a city from the list');
     } else {
-      evt.target.setCustomValidity('');
+      cityInput.setCustomValidity('');
       this.updateData({
         destination: newDestination,
       });
@@ -340,7 +335,7 @@ class FormEditView extends SmartView {
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(FormEditView.parseDataToPoint(this._data));
-    addNewEventButton.disabled = false;
+    // addNewEventButton.disabled = false;
   }
 
   setDeleteClickHandler = (callback) => {

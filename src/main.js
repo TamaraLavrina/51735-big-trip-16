@@ -1,4 +1,5 @@
-import { render, RenderPosition, remove } from './utils/render.js';
+import { render, RenderPosition, remove} from './utils/render.js';
+import { destinations } from './utils/utils.js';
 import { MenuItem, additionalOffers} from './constants.js';
 import MainTripView from './view/main-trip-view.js';
 import SiteMenuView from './view/site-menu-view.js';
@@ -9,7 +10,6 @@ import FilterModel from './model/filter-model.js';
 import OffersModel from './model/offers-model.js';
 import StatisticsView from './view/statistics-view.js';
 import DestinationModel from './model/destinations-model.js';
-import { destinations} from './mock/trip-point.js';
 import ApiService from './api-service.js';
 
 const AUTHORIZATION = 'Basic hzxcvzxcvzdgfmna2555j';

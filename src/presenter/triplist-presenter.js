@@ -33,11 +33,9 @@ class TripListPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
-  // #tripInfoComponent = null;
 
   constructor(tripListContainer,  pointsModel, filterModel, offersModel, destinationsModel) {
     this.#tripListContainer = tripListContainer;
-    // this.#routContainer = routContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
     this.#offersModel = offersModel;
