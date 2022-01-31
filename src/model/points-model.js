@@ -1,4 +1,5 @@
 import AbstractObservable from '../abstract-observable.js';
+import { UpdateType } from '../constants.js';
 
 class PointsModel extends AbstractObservable {
   #apiService = null;
@@ -7,23 +8,24 @@ class PointsModel extends AbstractObservable {
   constructor(apiService) {
     super();
     this.#apiService = apiService;
-
-    this.#apiService.points.then((points) => {
-      console.log(points.map(this.#adaptToClient));
-      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-      // а ещё на сервере используется snake_case, а у нас camelCase.
-      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-      // Есть вариант получше - паттерн "Адаптер"
-    });
-  }
-
-  set points(points) {
-    this.#points = [...points];
   }
 
   get points() {
     return this.#points;
   }
+
+  init = async () => {
+    try {
+      const points = await this.#apiService.points;
+      this.#points = points.map(this.#adaptToClient);
+      console.log(this.#points);
+    } catch(err) {
+      this.#points = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  }
+
 
   updatePoint = (updateType, update) => {
     const index = this.#points.findIndex((point) => point.id === update.id);
@@ -67,9 +69,10 @@ class PointsModel extends AbstractObservable {
 
   #adaptToClient = (point) => {
     const adaptedPoint = {...point,
-      dateFrom: new Date(point['startDate']),
-      dateTo: new Date(point['finishDate']),
+      startDate: new Date(point['date_from']),
+      finishDate: new Date(point['date_to']),
       isFavorite: point['is_favorite'],
+      basePrice: point['base_price'],
     };
 
     // Ненужные ключи мы удаляем

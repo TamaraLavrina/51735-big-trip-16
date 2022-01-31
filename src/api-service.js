@@ -55,6 +55,7 @@ export default class ApiService {
     const adaptedPoint = {...point,
       'date_from': point.startDate.toISOString(),
       'date_to': point.finishDate.toISOString(),
+      'base_price': point.basePrice,
       'is_favorite': point.isFavorite,
       // 'id': String(point.id),
     };
@@ -63,6 +64,7 @@ export default class ApiService {
     delete adaptedPoint.startDate;
     delete adaptedPoint.finishDate;
     delete adaptedPoint.isFavorite;
+    delete adaptedPoint.point.basePrice;
     // delete adaptedPoint.id;
 
     return adaptedPoint;

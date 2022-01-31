@@ -4,6 +4,7 @@ import SortView from '../view/sort-view.js';
 import EmptyList from '../view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
+import LoadingView from '../view/loading-view.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import { SortType, UpdateType, UserAction, EVENT_POINT_COUNT, FilterType } from '../constants.js';
 import { sortPointPrice, sortPointDay, sortPointTime } from '../utils/utils.js';
@@ -12,7 +13,7 @@ import {filter} from '../utils/filter.js';
 
 class TripListPresenter {
   #tripListContainer = null;
-  #routContainer = null;
+  // #routContainer = null;
   #pointsModel = null;
   #filterModel = null;
   #offersModel = null;
@@ -23,6 +24,7 @@ class TripListPresenter {
   #boardComponent = new EventBoard();
   #tripListComponent = new EventSked();
   #noPointsComponent = new EmptyList();
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
 
   #renderedPointCount = EVENT_POINT_COUNT;
@@ -30,11 +32,12 @@ class TripListPresenter {
   #pointNewPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
-  #tripInfoComponent = null;
+  #isLoading = true;
+  // #tripInfoComponent = null;
 
-  constructor(tripListContainer, routContainer, pointsModel, filterModel, offersModel, destinationsModel) {
+  constructor(tripListContainer,  pointsModel, filterModel, offersModel, destinationsModel) {
     this.#tripListContainer = tripListContainer;
-    this.#routContainer = routContainer;
+    // this.#routContainer = routContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
     this.#offersModel = offersModel;
@@ -148,6 +151,13 @@ class TripListPresenter {
         this.#renderBoard();
         break;
       }
+
+      case UpdateType.INIT:{
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
+      }
     }
   }
 
@@ -168,11 +178,11 @@ class TripListPresenter {
     render(this.#boardComponent, this.#sortComponent, RenderPosition.AFTERBEGIN);
   }
 
-  #renderMainTripInfo = () => {
-    if(this.#tripInfoComponent !== null) {
-      this.#tripInfoComponent = null;
-    }
-  }
+  // #renderMainTripInfo = () => {
+  //   if(this.#tripInfoComponent !== null) {
+  //     this.#tripInfoComponent = null;
+  //   }
+  // }
 
   #renderPoint = (point) => {
     this.#offers = this.#offersModel.offers;
@@ -186,6 +196,11 @@ class TripListPresenter {
 
   #renderPoints = (points) => {
     points.forEach((point) => this.#renderPoint(point));
+  }
+
+
+  #renderLoading = () => {
+    render(this.#boardComponent, this.#loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
   #renderNoPoints = () => {
@@ -208,7 +223,7 @@ class TripListPresenter {
 
     remove(this.#sortComponent);
     remove(this.#noPointsComponent);
-    remove(this.#tripInfoComponent);
+    // remove(this.#tripInfoComponent);
 
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
@@ -226,13 +241,18 @@ class TripListPresenter {
   }
 
   #renderBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderNoPoints();
       return;
     }
 
     this.#renderSort();
-    this.#renderMainTripInfo();
+    // this.#renderMainTripInfo();
     this.#renderList();
   }
 }

@@ -1,7 +1,6 @@
 import { render, RenderPosition, remove } from './utils/render.js';
-import { EVENT_POINT_COUNT, MenuItem, additionalOffers} from './constants.js';
+import { MenuItem, additionalOffers} from './constants.js';
 import MainTripView from './view/main-trip-view.js';
-import { generatePoint } from './mock/trip-point.js';
 import SiteMenuView from './view/site-menu-view.js';
 import TripListPresenter from './presenter/triplist-presenter.js';
 import PointsModel from './model/points-model.js';
@@ -16,9 +15,9 @@ import ApiService from './api-service.js';
 const AUTHORIZATION = 'Basic hzxcvzxcvzdgfmna2555j';
 const END_POINT = 'https://16.ecmascript.pages.academy/big-trip/';
 
-const points = Array.from({length: EVENT_POINT_COUNT}, generatePoint);
+
 const pointsModel = new PointsModel(new ApiService(END_POINT, AUTHORIZATION));
-pointsModel.points = points;
+
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
 offersModel.offers = additionalOffers;
@@ -29,7 +28,7 @@ destinationsModel.destinations = destinations;
 const header = document.querySelector('.page-header__container');
 const pageBody = document.querySelector('.page-body__page-main').querySelector('.page-body__container');
 const mainTripComponent = new MainTripView();
-const tripListPresenter = new TripListPresenter(pageBody, mainTripComponent, pointsModel, filterModel, offersModel, destinationsModel);
+const tripListPresenter = new TripListPresenter(pageBody,  pointsModel, filterModel, offersModel, destinationsModel);
 const controls = mainTripComponent.element.querySelector('.trip-main__trip-controls');
 const siteMenuComponent = new SiteMenuView();
 
@@ -86,5 +85,6 @@ render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
 
 filterPresenter.init();
 tripListPresenter.init();
+pointsModel.init();
 
 
