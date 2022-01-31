@@ -25,6 +25,7 @@ class PointNewPresenter {
     }
     this.#destroyCallback = callback;
 
+    console.log(this.#offers, this.#destinations);
     this.#pointEditComponent = new FormEditView(null, this.#offers, this.#destinations);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);

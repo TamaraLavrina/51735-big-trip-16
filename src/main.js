@@ -1,6 +1,7 @@
 import { render, RenderPosition, remove} from './utils/render.js';
-import { destinations } from './utils/utils.js';
-import { MenuItem, additionalOffers} from './constants.js';
+// import { destinations } from './utils/utils.js';
+import { MenuItem } from './constants.js';
+// import { MenuItem, additionalOffers, UpdateType} from './constants.js';
 import MainTripView from './view/main-trip-view.js';
 import SiteMenuView from './view/site-menu-view.js';
 import TripListPresenter from './presenter/triplist-presenter.js';
@@ -12,17 +13,16 @@ import StatisticsView from './view/statistics-view.js';
 import DestinationModel from './model/destinations-model.js';
 import ApiService from './api-service.js';
 
-const AUTHORIZATION = 'Basic hzxcvzxcvzdgfmna2555j';
+const AUTHORIZATION = 'Basic hzxcvzna2555j';
 const END_POINT = 'https://16.ecmascript.pages.academy/big-trip/';
 
 
-const pointsModel = new PointsModel(new ApiService(END_POINT, AUTHORIZATION));
+const api = new ApiService(END_POINT, AUTHORIZATION);
 
+const pointsModel = new PointsModel(api);
 const filterModel = new FilterModel();
-const offersModel = new OffersModel();
-offersModel.offers = additionalOffers;
-const destinationsModel = new DestinationModel();
-destinationsModel.destinations = destinations;
+const offersModel = new OffersModel(api);
+const destinationsModel = new DestinationModel(api);
 
 
 const header = document.querySelector('.page-header__container');
@@ -80,10 +80,15 @@ newPointButton.addEventListener('click', (evt) => {
   siteMenuComponent.element.querySelector(`[value=${MenuItem.STATS}]`).disabled = true;
 });
 
-filterPresenter.init();
-tripListPresenter.init();
+
+offersModel.init();
+destinationsModel.init();
 
 pointsModel.init().finally(() => {
+  filterPresenter.init();
+  tripListPresenter.init();
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
 });
+
+

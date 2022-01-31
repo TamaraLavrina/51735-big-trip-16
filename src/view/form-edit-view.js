@@ -1,5 +1,5 @@
 import { OFFERS_TYPES} from '../constants.js';
-import {   BLANK_POINT } from '../utils/utils.js';
+import { BLANK_POINT } from '../utils/utils.js';
 import SmartView from './smart-view.js';
 import he from 'he';
 
@@ -58,10 +58,12 @@ const createTypeList = () => (
     </div>`
   )).join('')
 );
+
 const getOfferByType = (offers, type) => {
   const offerByType = offers.find((offer) => offer.type === type);
   return offerByType;
 };
+
 const createFormEditTemplate = (data, availableOffersByType, destinationsFromModel ) => {
   const {type, basePrice, startDate, finishDate, destination, offers, id} = data;
   const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
@@ -248,7 +250,7 @@ class FormEditView extends SmartView {
       .addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('change', this.#cityChangeHandler);
-    this.element.querySelector('.event__available-offers')
+    this.element.querySelector('.event__section')
       .addEventListener('click', this.#offerChangeHandler);
     this.element.querySelector('.event__input--price').
       addEventListener('input', this.#priceChangeHandler);

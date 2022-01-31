@@ -30,7 +30,6 @@ class PointPresenter {
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
-
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 

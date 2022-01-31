@@ -2,19 +2,26 @@ import AbstractObservable from '../abstract-observable.js';
 
 class DestinationModel extends AbstractObservable {
   #destinations = null;
+  #apiService = null;
 
-  constructor() {
+  constructor( apiService) {
     super();
-    this.#destinations = [];
-  }
-
-  set destinations(destinations) {
-    this.#destinations = destinations;
+    this.#apiService = apiService;
   }
 
   get destinations() {
     return this.#destinations;
   }
+
+  init = async () => {
+    try {
+      const destinations = await this.#apiService.destinations;
+      this.#destinations = destinations;
+    } catch(err) {
+      this.#destinations = [];
+    }
+  }
 }
 
 export default DestinationModel;
+
