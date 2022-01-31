@@ -80,11 +80,10 @@ newPointButton.addEventListener('click', (evt) => {
   siteMenuComponent.element.querySelector(`[value=${MenuItem.STATS}]`).disabled = true;
 });
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
-
 filterPresenter.init();
 tripListPresenter.init();
-pointsModel.init();
 
-
+pointsModel.init().finally(() => {
+  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
+});
