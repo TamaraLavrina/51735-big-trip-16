@@ -93,9 +93,9 @@ Promise.all([
     pointsModel.points = [];
   })
   .finally(() => {
-    newPointButton.disabled = false;
     filterPresenter.init();
     tripListPresenter.init();
     render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
     siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+    newPointButton.disabled = false;
   });

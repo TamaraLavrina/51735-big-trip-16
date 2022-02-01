@@ -172,7 +172,6 @@ class PointPresenter {
       point,
     );
   }
-
 }
 
 export { State };

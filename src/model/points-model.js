@@ -1,5 +1,4 @@
 import AbstractObservable from '../abstract-observable.js';
-import { UpdateType } from '../constants.js';
 
 class PointsModel extends AbstractObservable {
   #apiService = null;
@@ -18,18 +17,6 @@ class PointsModel extends AbstractObservable {
     this.#points = points.map(this.#adaptToClient);
     this._notify(updateType);
   }
-
-  init = async () => {
-    try {
-      const points = await this.#apiService.points;
-      this.#points = points.map(this.#adaptToClient);
-    } catch(err) {
-      this.#points = [];
-    }
-
-    this._notify(UpdateType.INIT);
-  }
-
 
   updatePoint = async (updateType, update) => {
     const index = this.#points.findIndex((point) => point.id === update.id);
@@ -61,7 +48,7 @@ class PointsModel extends AbstractObservable {
       this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
     } catch(err) {
-      throw new Error('Can\'t add task');
+      throw new Error('Can\'t add point');
     }
   }
 
@@ -80,7 +67,7 @@ class PointsModel extends AbstractObservable {
       ];
       this._notify(updateType);
     } catch(err) {
-      throw new Error('Can\'t delete task');
+      throw new Error('Can\'t delete point');
     }
   }
 

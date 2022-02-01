@@ -140,7 +140,7 @@ class TripListPresenter {
       case UserAction.DELETE_POINT:{
         this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.DELETING);
         try {
-          await this.#pointsModel.deleteTask(updateType, update);
+          await this.#pointsModel.deletePoint(updateType, update);
         } catch(err) {
           this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
         }

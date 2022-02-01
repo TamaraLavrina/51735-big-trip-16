@@ -1,4 +1,3 @@
-import { OFFERS_TYPES} from '../constants.js';
 import { BLANK_POINT } from '../utils/utils.js';
 import SmartView from './smart-view.js';
 import he from 'he';
@@ -6,7 +5,6 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
   const isSelected = currentPointOffers.some((offer) => offer.id === possibleProposal.id);
   return isSelected;
@@ -50,8 +48,8 @@ const createDestinationalPhoto = (photos) => `<div class="event__photos-containe
   </div>
 </div>`;
 
-const createTypeList = () => (
-  OFFERS_TYPES.map((type) => (
+const createTypeList = (availableOffersByType) => (
+  availableOffersByType.map((type) => (
     `<div class="event__type-item">
       <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}">${type}</label>
@@ -64,7 +62,8 @@ const getOfferByType = (offers, type) => {
   return offerByType;
 };
 
-const createFormEditTemplate = (data, availableOffersByType, destinationsFromModel ) => {
+const createFormEditTemplate = (data, allOffers, availableOffersByType, destinationsFromModel) => {
+  const types = allOffers.map((el) => el.type);
   const {
     type,
     basePrice,
@@ -79,7 +78,7 @@ const createFormEditTemplate = (data, availableOffersByType, destinationsFromMod
   } = data;
   const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
   const cityList = createCityList(destinationsFromModel);
-  const typesList = createTypeList();
+  const typesList = createTypeList(types);
   const destinationPhotos = createDestinationalPhoto(destination.pictures);
   let showDestination = '';
   if (destination.name.length === 0) {
@@ -175,7 +174,7 @@ class FormEditView extends SmartView {
   }
 
   get template() {
-    return createFormEditTemplate(this._data, this.#tripOffer, this.#destinations);
+    return createFormEditTemplate(this._data, this.#offers, this.#tripOffer, this.#destinations);
   }
 
   removeElement = () => {
@@ -360,7 +359,6 @@ class FormEditView extends SmartView {
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(FormEditView.parseDataToPoint(this._data));
-    addNewEventButton.disabled = false;
   }
 
   setDeleteClickHandler = (callback) => {
