@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { HOUR, MINUTES_IN_DAY } from './constants.js';
+import { HOUR, MINUTES_IN_DAY } from '../constants.js';
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -10,20 +10,6 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const isFuture = (startDate) => dayjs(startDate).isAfter(dayjs(), 'D');
 const isPointPast = (startDate) => dayjs(startDate).isBefore(dayjs(), 'D');
-
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
-};
 
 const countDuration = (start, finish) => {
   const durationInMinutes = dayjs(finish).diff(dayjs(start), 'minute');
@@ -48,12 +34,47 @@ const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 const sortPointTime = (pointA, pointB) => getDiffTimePoint(pointB.startDate, pointB.finishDate) - getDiffTimePoint(pointA.startDate, pointA.finishDate);
 const sortPointDay = (pointA, pointB) => pointA.finishDate - pointB.startDate;
 
+const generateDate = () => {
+  const randomInterval = getRandomInteger(-2880, 2880);
+  const randomDuration = getRandomInteger(15, 360);
+
+  return {
+    startDate: dayjs().add(randomInterval, 'minute').toDate(),
+    endDate: dayjs().add(randomInterval + randomDuration, 'minute').toDate(),
+  };
+};
+
+const dateBlank = generateDate();
+
+const BLANK_POINT = {
+  basePrice: 1100,
+  startDate: dateBlank.startDate,
+  finishDate: dateBlank.endDate,
+  destination: {
+    description: 'Description of New City',
+    name: 'Paris',
+    pictures: [
+      {
+        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+        description: 'Chamonix parliament building'
+      }
+    ],
+  },
+  id: 80,
+  isFavorite: false,
+  type: 'flight',
+  offers: [],
+};
+
+
 export {getRandomInteger,
   isFuture,
   isPointPast,
-  updateItem,
   sortPointPrice,
   sortPointDay,
   sortPointTime,
-  countDuration
+  countDuration,
+  generateDate,
+  dateBlank,
+  BLANK_POINT
 };

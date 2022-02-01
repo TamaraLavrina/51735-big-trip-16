@@ -2,11 +2,10 @@ import dayjs  from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import AbstractView from './abstract-view.js';
-import { countDuration } from '../utils.js';
+import { countDuration } from '../utils/utils.js';
 
 const createPointTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, offers, isFavorite} = point;
-
   const dateFinishHours = dayjs(finishDate).format('HH:mm');
   const dateStartHours = dayjs(startDate).format('HH:mm');
   const startDateMonthAndDay = dayjs(startDate).format('MMM D');
@@ -35,11 +34,11 @@ const createPointTemplate = (point) => {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${offers.map((offer) =>
+    ${offers.map((item) =>
     `<li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
+      <span class="event__offer-title">${item.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
+      <span class="event__offer-price">${item.price}</span>
     </li>`).join('')
 }
     </ul>
@@ -88,4 +87,5 @@ class PointView extends AbstractView {
     this._callback.favoriteClick();
   }
 }
+
 export default PointView;
