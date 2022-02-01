@@ -81,7 +81,7 @@ const destinations = CITY.map((el) => ({
 
 const dateBlank = generateDate();
 
-const BLANK_POINT = () => ({
+const BLANK_POINT = {
   basePrice: 1100,
   startDate: dateBlank.startDate,
   finishDate: dateBlank.endDate,
@@ -99,7 +99,7 @@ const BLANK_POINT = () => ({
   isFavorite: false,
   type: 'flight',
   offers: [],
-});
+};
 
 
 export {getRandomInteger,

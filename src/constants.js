@@ -258,6 +258,8 @@ const MenuItem = {
   STATS: 'Stats',
 };
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export {
   CITY,
   EVENT_POINT_COUNT,
@@ -273,5 +275,6 @@ export {
   UpdateType,
   FilterType,
   MenuItem,
+  SHAKE_ANIMATION_TIMEOUT
 };
 

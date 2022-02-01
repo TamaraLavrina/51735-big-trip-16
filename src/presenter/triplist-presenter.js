@@ -2,7 +2,7 @@ import EventSked from '../view/events-list-view.js';
 import EventBoard from '../view/event-board-view.js';
 import SortView from '../view/sort-view.js';
 import EmptyList from '../view/empty-list-view.js';
-import PointPresenter from './point-presenter.js';
+import PointPresenter, {State as PointPresenterViewState}  from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
@@ -40,8 +40,8 @@ class TripListPresenter {
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
 
-    console.log(this.offers, this.destinations);
-    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.offers, this.destinations, this.#handleViewAction);
+
+    this.#pointNewPresenter = new PointNewPresenter(this.#tripListComponent, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -104,7 +104,7 @@ class TripListPresenter {
     if (!this.#tripListContainer.contains(this.#tripListComponent.element)) {
       this.#renderList();
     }
-    this.#pointNewPresenter.init(callback);
+    this.#pointNewPresenter.init(callback, this.#offers, this.#destinations);
 
     remove(this.#noPointsComponent);
   }
@@ -115,19 +115,35 @@ class TripListPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:{
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.SAVING);
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+        }
         break;
       }
 
       case UserAction.ADD_POINT:{
-        this.#pointsModel.addPoint(updateType, update);
+        this.#pointNewPresenter.setSaving();
+        try {
+          await this.#pointsModel.addPoint(updateType, update);
+        }
+        catch(err) {
+          this.#pointNewPresenter.setAborting();
+        }
         break;
       }
       case UserAction.DELETE_POINT:{
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.DELETING);
+        try {
+          await this.#pointsModel.deleteTask(updateType, update);
+        } catch(err) {
+          this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+        }
         break;
       }
     }
@@ -149,7 +165,6 @@ class TripListPresenter {
         this.#renderBoard();
         break;
       }
-
       case UpdateType.INIT:{
         this.#isLoading = false;
         remove(this.#loadingComponent);

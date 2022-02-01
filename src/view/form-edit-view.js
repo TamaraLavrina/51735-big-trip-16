@@ -6,7 +6,7 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-// const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
+const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 const checkIsOfferSelected = (currentPointOffers, possibleProposal) => {
   const isSelected = currentPointOffers.some((offer) => offer.id === possibleProposal.id);
   return isSelected;
@@ -65,7 +65,18 @@ const getOfferByType = (offers, type) => {
 };
 
 const createFormEditTemplate = (data, availableOffersByType, destinationsFromModel ) => {
-  const {type, basePrice, startDate, finishDate, destination, offers, id} = data;
+  const {
+    type,
+    basePrice,
+    startDate,
+    finishDate,
+    destination,
+    offers,
+    id,
+    isDisabled,
+    isSaving,
+    isDeleting,
+  } = data;
   const addOffersOption = createAdditionalOffer(offers, availableOffersByType);
   const cityList = createCityList(destinationsFromModel);
   const typesList = createTypeList();
@@ -75,7 +86,17 @@ const createFormEditTemplate = (data, availableOffersByType, destinationsFromMod
     showDestination = 'visually-hidden';
   }
 
-  return  `<li class="trip-events__item">
+  const classButtonEditForm = {
+    ROLLUP_BUTTON_CLASS: 'event__rollup-btn',
+    RESET_BUTTON_NAME: 'Delete',
+  };
+
+  if (data.id === BLANK_POINT.id) {
+    classButtonEditForm.ROLLUP_BUTTON_CLASS = 'visually-hidden';
+    classButtonEditForm.RESET_BUTTON_NAME = 'Cancel';
+  }
+
+  return  `<li class="trip-events__item ${classButtonEditForm.ADD_FORM_CLASS}">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -83,7 +104,7 @@ const createFormEditTemplate = (data, availableOffersByType, destinationsFromMod
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
         </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox">
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox"  ${isDisabled ? 'disabled' : ''}>
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
@@ -114,9 +135,10 @@ const createFormEditTemplate = (data, availableOffersByType, destinationsFromMod
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
-      <button class="event__rollup-btn" type="button">
+
+      <button class="event__save-btn  btn  btn--blue" type="submit"  ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : classButtonEditForm.RESET_BUTTON_NAME}</button>
+      <button class="${classButtonEditForm.ROLLUP_BUTTON_CLASS}" type="button"  ${isDisabled ? 'disabled' : ''}>
         <span class="visually-hidden">Open event</span>
       </button>
     </header>
@@ -146,7 +168,8 @@ class FormEditView extends SmartView {
     this._data = FormEditView.parsePointToData(point || BLANK_POINT);
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#tripOffer = getOfferByType(this.#offers, this._data.type).offers;
+
+    this.#tripOffer = (this.#offers.find((offer) => offer.type === this._data.type)).offers;
     this.#setDatepicker();
     this.#setInnerHandlers();
   }
@@ -337,7 +360,7 @@ class FormEditView extends SmartView {
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(FormEditView.parseDataToPoint(this._data));
-    // addNewEventButton.disabled = false;
+    addNewEventButton.disabled = false;
   }
 
   setDeleteClickHandler = (callback) => {
@@ -345,8 +368,22 @@ class FormEditView extends SmartView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
   }
 
-  static parsePointToData = (point) => point
-  static parseDataToPoint = (data) => data
+  static parsePointToData = (point) => ({
+    ...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
+  });
+
+  static parseDataToPoint = (data) => {
+    const point = { ...data };
+
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  }
 }
 
 export default FormEditView;

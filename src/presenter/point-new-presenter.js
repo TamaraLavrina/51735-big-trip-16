@@ -9,24 +9,21 @@ class PointNewPresenter {
 
   #pointEditComponent = null;
   #destroyCallback = null;
-  #offers = null;
-  #destinations = null;
+  // #offers = null;
+  // #destinations = null;
 
-  constructor(pointListContainer, offers, destinations, changeData) {
+  constructor(pointListContainer, changeData) {
     this.#pointListContainer = pointListContainer;
-    this.#offers = offers;
-    this.#destinations = destinations;
     this.#changeData = changeData;
   }
 
-  init = (callback) => {
+  init = (callback, commonOffers, commonDestinations) => {
     if (this.#pointEditComponent !== null) {
       return;
     }
     this.#destroyCallback = callback;
 
-    console.log(this.#offers, this.#destinations);
-    this.#pointEditComponent = new FormEditView(null, this.#offers, this.#destinations);
+    this.#pointEditComponent = new FormEditView(null, commonOffers, commonDestinations);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
@@ -51,13 +48,31 @@ class PointNewPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving = () => {
+    this.#pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       point,
     );
-    this.destroy();
   }
 
   #handleDeleteClick = () => {

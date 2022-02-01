@@ -1,7 +1,5 @@
 import { render, RenderPosition, remove} from './utils/render.js';
-// import { destinations } from './utils/utils.js';
 import { MenuItem } from './constants.js';
-// import { MenuItem, additionalOffers, UpdateType} from './constants.js';
 import MainTripView from './view/main-trip-view.js';
 import SiteMenuView from './view/site-menu-view.js';
 import TripListPresenter from './presenter/triplist-presenter.js';
@@ -87,8 +85,8 @@ destinationsModel.init();
 pointsModel.init().finally(() => {
   filterPresenter.init();
   tripListPresenter.init();
-  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
+  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 });
 
 
