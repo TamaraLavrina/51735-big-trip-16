@@ -48,6 +48,6 @@ export {
   MenuItem,
   SHAKE_ANIMATION_TIMEOUT,
   AUTHORIZATION,
-  END_POINT,
+  END_POINT
 };
 
