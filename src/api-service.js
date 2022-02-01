@@ -14,17 +14,17 @@ export default class ApiService {
     this.#authorization = authorization;
   }
 
-  get points() {
+  getPoints() {
     return this.#load({url: 'points'})
       .then(ApiService.parseResponse);
   }
 
-  get destinations() {
+  getDestinations() {
     return this.#load({ url: 'destinations' })
       .then(ApiService.parseResponse);
   }
 
-  get offers() {
+  getOffers() {
     return this.#load({ url: 'offers' })
       .then(ApiService.parseResponse);
   }

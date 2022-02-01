@@ -1,5 +1,5 @@
 import { render, RenderPosition, remove} from './utils/render.js';
-import { MenuItem } from './constants.js';
+import { MenuItem, END_POINT, AUTHORIZATION, UpdateType } from './constants.js';
 import MainTripView from './view/main-trip-view.js';
 import SiteMenuView from './view/site-menu-view.js';
 import TripListPresenter from './presenter/triplist-presenter.js';
@@ -11,16 +11,13 @@ import StatisticsView from './view/statistics-view.js';
 import DestinationModel from './model/destinations-model.js';
 import ApiService from './api-service.js';
 
-const AUTHORIZATION = 'Basic hzxcvzna2555j';
-const END_POINT = 'https://16.ecmascript.pages.academy/big-trip/';
-
 
 const api = new ApiService(END_POINT, AUTHORIZATION);
 
 const pointsModel = new PointsModel(api);
 const filterModel = new FilterModel();
-const offersModel = new OffersModel(api);
-const destinationsModel = new DestinationModel(api);
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationModel();
 
 
 const header = document.querySelector('.page-header__container');
@@ -79,14 +76,26 @@ newPointButton.addEventListener('click', (evt) => {
 });
 
 
-offersModel.init();
-destinationsModel.init();
-
-pointsModel.init().finally(() => {
-  filterPresenter.init();
-  tripListPresenter.init();
-  render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
-  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-});
-
-
+Promise.all([
+  api.getPoints(),
+  api.getOffers(),
+  api.getDestinations(),
+])
+  .then((values) => {
+    const [points, offers, destinations] = values;
+    offersModel.setOffers(offers);
+    destinationsModel.setDestinations(destinations);
+    pointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .catch(() => {
+    destinationsModel.destinations = [];
+    offersModel.offers = [];
+    pointsModel.points = [];
+  })
+  .finally(() => {
+    newPointButton.disabled = false;
+    filterPresenter.init();
+    tripListPresenter.init();
+    render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  });

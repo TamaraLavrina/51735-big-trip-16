@@ -9,8 +9,6 @@ class PointNewPresenter {
 
   #pointEditComponent = null;
   #destroyCallback = null;
-  // #offers = null;
-  // #destinations = null;
 
   constructor(pointListContainer, changeData) {
     this.#pointListContainer = pointListContainer;

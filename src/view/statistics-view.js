@@ -26,7 +26,7 @@ const getDurationTime = (ms) => {
 };
 
 const moneyChart = (moneyCtx, points) => {
-//   //функция для отрисовки графиков по цене
+
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
   const moneyArray =  Array.from(points.reduce((point, { type, basePrice }) => point.set(type, (point.get(type) || 0) + basePrice), new Map));
@@ -99,7 +99,7 @@ const moneyChart = (moneyCtx, points) => {
 };
 
 const typeChart = (typeCtx, points) => {
-  //функция для отрисовки графиков по типу
+
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
   const typeArray =  Array.from(points.reduce((point, {type}) => point.set(type, (point.get(type) || 0) + 1), new Map));
@@ -173,7 +173,7 @@ const typeChart = (typeCtx, points) => {
 };
 
 const timeChart = (timeCtx, points) => {
-  //функция для отрисовки графиков по типу
+
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
   const timeArray =  Array.from(points.reduce((point, { type, startDate, finishDate }) => point.set(type, (point.get(type) || 0) + dayjs(finishDate).diff(dayjs(startDate))), new Map));

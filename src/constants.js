@@ -260,6 +260,9 @@ const MenuItem = {
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
+const AUTHORIZATION = 'Basic hzxcvzna2555j';
+const END_POINT = 'https://16.ecmascript.pages.academy/big-trip/';
+
 export {
   CITY,
   EVENT_POINT_COUNT,
@@ -275,6 +278,8 @@ export {
   UpdateType,
   FilterType,
   MenuItem,
-  SHAKE_ANIMATION_TIMEOUT
+  SHAKE_ANIMATION_TIMEOUT,
+  AUTHORIZATION,
+  END_POINT
 };
 

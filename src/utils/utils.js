@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
 import { HOUR, MINUTES_IN_DAY, CITY, DESCRIPTION_CITY, PICTURES_CITY, } from '../constants.js';
 
-// import {, POINT_PRICE, OFFERS_TYPES,  additionalOffers } from '../constants.js';
-
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));

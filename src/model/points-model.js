@@ -14,6 +14,11 @@ class PointsModel extends AbstractObservable {
     return this.#points;
   }
 
+  setPoints(updateType, points) {
+    this.#points = points.map(this.#adaptToClient);
+    this._notify(updateType);
+  }
+
   init = async () => {
     try {
       const points = await this.#apiService.points;
@@ -87,7 +92,6 @@ class PointsModel extends AbstractObservable {
       basePrice: point['base_price'],
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedPoint['date_from'];
     delete adaptedPoint['date_to'];
     delete adaptedPoint['is_favorite'];
