@@ -2,13 +2,13 @@ import { render, RenderPosition, remove} from './utils/render.js';
 import { MenuItem, END_POINT, AUTHORIZATION, UpdateType } from './constants.js';
 import MainTripView from './view/main-trip-view.js';
 import SiteMenuView from './view/site-menu-view.js';
-import TripListPresenter from './presenter/triplist-presenter.js';
+import TripListPresenter from './presenter/trip-list-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
 import OffersModel from './model/offers-model.js';
 import StatisticsView from './view/statistics-view.js';
-import DestinationModel from './model/destinations-model.js';
+import DestinationsModel from './model/destinations-model.js';
 import ApiService from './api-service.js';
 
 
@@ -17,7 +17,7 @@ const api = new ApiService(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel(api);
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
-const destinationsModel = new DestinationModel();
+const destinationsModel = new DestinationsModel();
 
 
 const header = document.querySelector('.page-header__container');
@@ -81,11 +81,16 @@ Promise.all([
   api.getOffers(),
   api.getDestinations(),
 ])
+
   .then((values) => {
     const [points, offers, destinations] = values;
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(destinations);
     pointsModel.setPoints(UpdateType.INIT, points);
+    filterPresenter.init();
+    tripListPresenter.init();
+    render(controls, siteMenuComponent, RenderPosition.AFTERBEGIN);
+    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   })
   .catch(() => {
     destinationsModel.destinations = [];
@@ -93,9 +98,5 @@ Promise.all([
     pointsModel.points = [];
   })
   .finally(() => {
-    filterPresenter.init();
-    tripListPresenter.init();
-    render(controls, siteMenuComponent, RenderPosition.BEFOREEND);
-    siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
     newPointButton.disabled = false;
   });

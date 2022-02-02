@@ -6,10 +6,10 @@ const createEventBoardTemplate = () => (
   </section>`
 );
 
-class EventBoard extends AbstractView {
+class EventBoardView extends AbstractView {
   get template() {
     return createEventBoardTemplate();
   }
 }
 
-export default EventBoard;
+export default EventBoardView;

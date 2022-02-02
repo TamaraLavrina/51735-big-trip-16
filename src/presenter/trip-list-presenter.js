@@ -1,7 +1,7 @@
-import EventSked from '../view/events-list-view.js';
-import EventBoard from '../view/event-board-view.js';
+import EventSkedView from '../view/event-sked-view.js';
+import EventBoardView from '../view/event-board-view.js';
 import SortView from '../view/sort-view.js';
-import EmptyList from '../view/empty-list-view.js';
+import EmptyListView from '../view/empty-list-view.js';
 import PointPresenter, {State as PointPresenterViewState}  from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
 import LoadingView from '../view/loading-view.js';
@@ -20,9 +20,9 @@ class TripListPresenter {
   #offers = null;
   #destinations = null;
 
-  #boardComponent = new EventBoard();
-  #tripListComponent = new EventSked();
-  #noPointsComponent = new EmptyList();
+  #boardComponent = new EventBoardView();
+  #tripListComponent = new EventSkedView();
+  #noPointsComponent = new EmptyListView();
   #loadingComponent = new LoadingView();
   #sortComponent = null;
 
@@ -121,6 +121,7 @@ class TripListPresenter {
         this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.SAVING);
         try {
           await this.#pointsModel.updatePoint(updateType, update);
+
         } catch(err) {
           this.#pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
         }
@@ -131,8 +132,7 @@ class TripListPresenter {
         this.#pointNewPresenter.setSaving();
         try {
           await this.#pointsModel.addPoint(updateType, update);
-        }
-        catch(err) {
+        } catch(err) {
           this.#pointNewPresenter.setAborting();
         }
         break;
@@ -168,7 +168,6 @@ class TripListPresenter {
       case UpdateType.INIT:{
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#renderBoard();
         break;
       }
     }
@@ -180,7 +179,7 @@ class TripListPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearBoard({resetRenderedPointCount: true});
+    this.#clearBoard();
     this.#renderBoard();
   }
 
@@ -210,7 +209,7 @@ class TripListPresenter {
   }
 
   #renderNoPoints = () => {
-    this.#noPointsComponent = new EmptyList(this.#filterType);
+    this.#noPointsComponent = new EmptyListView(this.#filterType);
     render(this.#boardComponent, this.#noPointsComponent, RenderPosition.AFTERBEGIN);
   }
 
@@ -220,24 +219,17 @@ class TripListPresenter {
     this.#renderPoints(points);
   }
 
-  #clearBoard = ({resetRenderedPointCount = false, resetSortType = false} = {}) => {
-    const pointCount = this.points.length;
-
+  #clearBoard = (resetSortType = false) => {
     this.#pointNewPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
     remove(this.#noPointsComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
-    }
-
-    if (resetRenderedPointCount) {
-      this.#renderedPointCount = EVENT_POINT_COUNT;
-    } else {
-      this.#renderedPointCount = Math.min(pointCount, this.#renderedPointCount);
     }
 
     if (resetSortType) {
@@ -246,12 +238,15 @@ class TripListPresenter {
   }
 
   #renderBoard = () => {
+    const points = this.points;
+    const pointsCount = points.length;
+
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
 
-    if (this.points.length === 0) {
+    if (pointsCount === 0) {
       this.#renderNoPoints();
       return;
     }

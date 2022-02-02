@@ -37,14 +37,14 @@ const createAdditionalOffer = (currentPointOffers, possibleProposals ) => {
 };
 
 const createCityList = (destinationsFromModel) => (
-  destinationsFromModel.map((obj) => (
-    `<option value="${he.encode(obj.name)}"></option>`
+  destinationsFromModel.map((item) => (
+    `<option value="${he.encode(item.name)}"></option>`
   )).join('')
 );
 
 const createDestinationalPhoto = (photos) => `<div class="event__photos-container">
   <div class="event__photos-tape">
-    ${photos.map((el) => `<img class="event__photo" src="${el.src}" alt="${photos.description}">`)}
+    ${photos.map((el) => `<img class="event__photo" src="${el.src}" alt="${photos.description}">`).join('')}
   </div>
 </div>`;
 
@@ -364,6 +364,7 @@ class FormEditView extends SmartView {
   setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+
   }
 
   static parsePointToData = (point) => ({

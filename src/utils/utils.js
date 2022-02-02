@@ -8,10 +8,7 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const isFuture = (startDate) => dayjs(startDate).isAfter(dayjs(), 'D');
-const isPointPast = (startDate) => dayjs(startDate).isBefore(dayjs(), 'D');
-
-const countDuration = (start, finish) => {
+const getDuration = (start, finish) => {
   const durationInMinutes = dayjs(finish).diff(dayjs(start), 'minute');
 
   if(durationInMinutes < HOUR) {
@@ -67,13 +64,12 @@ const BLANK_POINT = {
 };
 
 
-export {getRandomInteger,
-  isFuture,
-  isPointPast,
+export {
+  getRandomInteger,
   sortPointPrice,
   sortPointDay,
   sortPointTime,
-  countDuration,
+  getDuration,
   generateDate,
   dateBlank,
   BLANK_POINT

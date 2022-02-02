@@ -1,6 +1,6 @@
 import AbstractObservable from '../abstract-observable.js';
 
-class DestinationModel extends AbstractObservable {
+class DestinationsModel extends AbstractObservable {
   #destinations = null;
 
   constructor() {
@@ -17,5 +17,5 @@ class DestinationModel extends AbstractObservable {
   }
 }
 
-export default DestinationModel;
+export default DestinationsModel;
 

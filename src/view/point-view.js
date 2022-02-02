@@ -2,7 +2,7 @@ import dayjs  from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import AbstractView from './abstract-view.js';
-import { countDuration } from '../utils/utils.js';
+import { getDuration } from '../utils/utils.js';
 
 const createPointTemplate = (point) => {
   const {type, basePrice, startDate, finishDate, destination, offers, isFavorite} = point;
@@ -12,7 +12,7 @@ const createPointTemplate = (point) => {
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn'
     : 'event__favorite-btn--active';
-  const pointDuration = countDuration(startDate,finishDate);
+  const pointDuration = getDuration(startDate,finishDate);
 
   return  `<li class="trip-events__item">
   <div class="event">

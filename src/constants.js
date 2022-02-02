@@ -2,7 +2,7 @@ const EVENT_POINT_COUNT = 3;
 const SHAKE_ANIMATION_TIMEOUT = 600;
 const MINUTES_IN_DAY = 24*60;
 const HOUR = 60;
-const AUTHORIZATION = 'Basic hzxcvzna2555j';
+const AUTHORIZATION = 'Basic hzxjh5762555j';
 const END_POINT = 'https://16.ecmascript.pages.academy/big-trip/';
 
 const SortType = {
