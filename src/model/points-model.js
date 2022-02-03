@@ -14,7 +14,7 @@ class PointsModel extends AbstractObservable {
   }
 
   setPoints(updateType, points) {
-    this.#points = points.map(this.#adaptToClient);
+    this.#points = points.slice().map(this.#adaptToClient);
     this._notify(updateType);
   }
 

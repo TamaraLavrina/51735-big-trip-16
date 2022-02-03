@@ -56,8 +56,9 @@ export default class ApiService {
   }
 
   deletePoint = async (point) => {
+    const adaptedPoint = this.#adaptToServer(point);
     const response = await this.#load({
-      url: `points/${point.id}`,
+      url: `points/${adaptedPoint.id}`,
       method: Method.DELETE,
     });
 

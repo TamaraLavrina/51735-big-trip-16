@@ -25,20 +25,20 @@ const getDurationTime = (ms) => {
   return `${minutes}M`;
 };
 
-const moneyChart = (moneyCtx, points) => {
+const renderMoneyChart = (moneyCtx, points) => {
 
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
-  const moneyArray =  Array.from(points.reduce((point, { type, basePrice }) => point.set(type, (point.get(type) || 0) + basePrice), new Map));
-  const sortedMoney = moneyArray.sort((a, b) => b[1] - a[1]);
-  const moneyForType = sortedMoney.map((it) => it[1]);
+  const uniqTypesValues =  Array.from(points.reduce((point, { type, basePrice }) => point.set(type, (point.get(type) || 0) + basePrice), new Map));
+  const sortedUniqTypesValues = uniqTypesValues.sort((a, b) => b[1] - a[1]);
+  const typeValues = sortedUniqTypesValues.map((it) => it[1]);
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
       labels: uniqTypes,
       datasets: [{
-        data: moneyForType,
+        data: typeValues,
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
@@ -98,21 +98,21 @@ const moneyChart = (moneyCtx, points) => {
   });
 };
 
-const typeChart = (typeCtx, points) => {
+const renderTypeChart = (typeCtx, points) => {
 
   const types = points.map((point) => point.type);
-  const uniqTypes = makeItemsUniq(types);
-  const typeArray =  Array.from(points.reduce((point, {type}) => point.set(type, (point.get(type) || 0) + 1), new Map));
-  const sortedType = typeArray.sort((a,b) => b[1] - a[1]);
-  const typeQuantity = sortedType.map((it) => it[1]);
+  const typesLabels = makeItemsUniq(types);
+  const typeValues =  Array.from(points.reduce((point, {type}) => point.set(type, (point.get(type) || 0) + 1), new Map));
+  const sortedTypeValues = typeValues.sort((a,b) => b[1] - a[1]);
+  const typeMeanings = sortedTypeValues.map((it) => it[1]);
 
   return new Chart(typeCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: uniqTypes,
+      labels: typesLabels,
       datasets: [{
-        data: typeQuantity,
+        data: typeMeanings,
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
@@ -172,20 +172,20 @@ const typeChart = (typeCtx, points) => {
   });
 };
 
-const timeChart = (timeCtx, points) => {
+const renderTimeChart = (timeCtx, points) => {
 
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
-  const timeArray =  Array.from(points.reduce((point, { type, startDate, finishDate }) => point.set(type, (point.get(type) || 0) + dayjs(finishDate).diff(dayjs(startDate))), new Map));
-  const sortedTime = timeArray.sort((a, b) => b[1] - a[1]);
-  const timeForType = sortedTime.map((it) => it[1]);
+  const timeLengths =  Array.from(points.reduce((point, { type, startDate, finishDate }) => point.set(type, (point.get(type) || 0) + dayjs(finishDate).diff(dayjs(startDate))), new Map));
+  const sortedTimeLengths = timeLengths.sort((a, b) => b[1] - a[1]);
+  const timeLengthsForTypes = sortedTimeLengths.map((it) => it[1]);
   return new Chart(timeCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
       labels: uniqTypes,
       datasets: [{
-        data: timeForType,
+        data: timeLengthsForTypes,
         backgroundColor: '#ffffff',
         hoverBackgroundColor: '#ffffff',
         anchor: 'start',
@@ -253,11 +253,11 @@ const createStatisticsTemplate = () => {
   <h2 class="visually-hidden">Trip statistics</h2>
   ${canvasTypes.map((id) => `<div class="statistics__item">
   <canvas class="statistics__chart" id="${id}" width="900"></canvas>
-</div>`)}
+</div>`).join('')}
 </section>`;
 };
 
-class Statistics extends SmartView {
+class StatisticsView extends SmartView {
     #renderMoneyChart = null;
     #renderTypeChart = null;
     #renderTimeChart = null;
@@ -306,9 +306,9 @@ class Statistics extends SmartView {
       typeCtx.height = BAR_HEIGHT * 5;
       timeCtx.height = BAR_HEIGHT * 5;
 
-      this.#renderMoneyChart = moneyChart(moneyCtx, this._data);
-      this.#renderTypeChart = typeChart(typeCtx, this._data);
-      this.#renderTimeChart = timeChart(timeCtx, this._data);
+      this.#renderMoneyChart = renderMoneyChart(moneyCtx, this._data);
+      this.#renderTypeChart = renderTypeChart(typeCtx, this._data);
+      this.#renderTimeChart = renderTimeChart(timeCtx, this._data);
     }
 
     restoreHandlers() {
@@ -316,5 +316,5 @@ class Statistics extends SmartView {
     }
 }
 
-export default  Statistics;
+export default  StatisticsView;
 

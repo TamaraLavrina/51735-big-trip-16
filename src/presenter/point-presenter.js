@@ -171,6 +171,7 @@ class PointPresenter {
       UpdateType.MINOR,
       point,
     );
+
   }
 }
 

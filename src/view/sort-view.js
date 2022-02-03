@@ -4,15 +4,15 @@ import {SortType} from '../constants.js';
 const createMainSortTemplate = (currentSortType) => {
   const sortDirections = Object.values(SortType);
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-    ${sortDirections.map((obj) => `<div class="trip-sort__item  trip-sort__item--${obj}">
+    ${sortDirections.map((item) => `<div class="trip-sort__item  trip-sort__item--${item}">
     <input
-    id="sort-${obj}"
+    id="sort-${item}"
     class="trip-sort__input  visually-hidden"
-    data-sort-type="${obj}"
+    data-sort-type="${item}"
     type="radio"
-    ${obj  === currentSortType ? 'checked' : ''}
+    ${item  === currentSortType ? 'checked' : ''}
     name="trip-sort"/>
-    <label class="trip-sort__btn" for="sort-${obj}">${obj}</label>
+    <label class="trip-sort__btn" for="sort-${item}">${item}</label>
   </div>`).join('')}
   </form>`;};
 
