@@ -236,12 +236,19 @@ main {
   margin-bottom: 9px; }
 
 .trip-tabs {
+
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   -ms-flex-align: start;
       align-items: flex-start; }
+
+.trip-menu {
+  position: relative;
+  display: flex;
+  margin-right: 26px;
+}
 
 .trip-tabs__btn {
   display: block;
@@ -263,9 +270,24 @@ main {
     opacity: 1; }
   .trip-tabs__btn:active {
     opacity: 0.6; }
-  .trip-tabs__btn--active, .trip-tabs__btn--active:hover, .trip-tabs__btn--active:active {
+  .trip-tabs__btn--active, .trip-tabs__btn--active:hover, .trip-tabs__btn:checked {
     opacity: 1;
-    cursor: default; }
+    cursor: pointer; }
+
+  .trip-tabs__input {
+    -webkit-appearance: none;
+    appearance: none;
+    z-index: 10;
+  }
+
+  .trip-tabs__input::before {
+    position: absolute;
+    top:0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    content: '';
+  }
 
 .trip-filters {
   display: -ms-flexbox;
@@ -536,6 +558,11 @@ main {
   font-size: 52px;
   line-height: 61px;
   text-align: center; }
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
+}
 
 .event {
   display: -ms-flexbox;

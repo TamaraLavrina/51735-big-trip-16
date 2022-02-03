@@ -205,7 +205,7 @@ const renderTimeChart = (timeCtx, points) => {
       },
       title: {
         display: true,
-        text: 'TYPE',
+        text: 'TIME',
         fontColor: '#000000',
         fontSize: 23,
         position: 'left',

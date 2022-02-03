@@ -46,22 +46,24 @@ const handleSiteMenuClick = (menuItem) => {
     case MenuItem.TABLE: {
       remove(statisticsComponent);
       filterPresenter.destroy();
-      filterPresenter.init();
       tripListPresenter.destroy();
+      filterPresenter.init();
       tripListPresenter.init();
-      siteMenuComponent.element.querySelector(`[value=${MenuItem.TABLE}]`).disabled = true;
-      siteMenuComponent.element.querySelector(`[value=${MenuItem.STATS}]`).disabled = true;
-      remove(statisticsComponent);
       siteMenuComponent.setMenuItem(MenuItem.TABLE);
+      statisticsComponent = null;
       break;
     }
 
     case MenuItem.STATS: {
+      if (statisticsComponent !== null) {
+        return;
+      }
+
       filterPresenter.destroy();
       tripListPresenter.destroy();
+      siteMenuComponent.setMenuItem(MenuItem.STATS);
       statisticsComponent = new StatisticsView(pointsModel.points);
       render(pageBody, statisticsComponent, RenderPosition.BEFOREEND);
-      siteMenuComponent.setMenuItem(MenuItem.STATS);
     }
       break;
   }
@@ -71,8 +73,6 @@ newPointButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   newPointButton.disabled = true;
   tripListPresenter.createPoint(handlePointNewFormClose);
-  siteMenuComponent.element.querySelector(`[value=${MenuItem.TABLE}]`).disabled = true;
-  siteMenuComponent.element.querySelector(`[value=${MenuItem.STATS}]`).disabled = true;
 });
 
 

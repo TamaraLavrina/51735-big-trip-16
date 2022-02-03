@@ -5,8 +5,25 @@ const createSiteMenuTemplate = () => (
   `<div class="trip-controls__navigation">
     <h2 class="visually-hidden">Switch trip view</h2>
     <nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#" value="${MenuItem.TABLE}">${MenuItem.TABLE}</a>
-      <a class="trip-tabs__btn" href="#" value="${MenuItem.STATS}">${MenuItem.STATS}</a>
+    <div class="trip-menu ">
+        <input
+        type="radio"
+        name="control"
+        id="control__task"
+        class="trip-tabs__input"
+        value="${MenuItem.TABLE}"
+        checked />
+      <label for="control__task" class="trip-tabs__btn">${MenuItem.TABLE}</label>
+    </div>
+    <div class ="trip-menu " >
+     <input
+      type="radio"
+      name="control"
+      id="control__task"
+      class="trip-tabs__input"
+      value="${MenuItem.STATS}" />
+    <label for="control__task" class="trip-tabs__btn">${MenuItem.STATS}</label>
+    </div>
     </nav>
   </div>`
 );
@@ -31,7 +48,7 @@ class SiteMenuView extends AbstractView {
 
   #menuClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.menuClick(evt.target.text);
+    this._callback.menuClick(evt.target.value);
   }
 }
 export default SiteMenuView;
